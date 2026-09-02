@@ -1,0 +1,30 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Agents and Tools</title><link rel="stylesheet" href="../../assets/css/course.css"></head><body><main>
+<p><a href="index.html">Module 6 index</a> · <a href="02_openai_sdk_agent.html">Next →</a></p><h1>Agents, Tools, Schemas, and Action Logs</h1>
+<h2>Learning goals</h2><ul><li>Explain the difference between a chatbot, an agent, and a workflow.</li><li>Design narrow deterministic tools.</li><li>Validate tool arguments and record an action log.</li></ul>
+<h2>1. What is an AI agent?</h2><p>In this course, an AI agent is a program in which a language model can decide what step to take and which declared tool to request. The surrounding Python application controls what is permitted, executes tools, returns their results, and decides when the process must stop.</p>
+<p>A chatbot normally produces text. An agent can request actions. A workflow follows transitions designed in advance. Real applications often combine them: a model chooses among narrow options inside a deterministic workflow.</p>
+<h2>2. The agent loop</h2><ol><li>Receive a user request.</li><li>Decide whether it is supported and complete.</li><li>Select an allowed tool or ask a precise question.</li><li>Validate the proposed arguments and units.</li><li>Execute a tested Python function.</li><li>Return the structured result to the model.</li><li>Verify, log, and explain the outcome.</li><li>Stop at the answer or at a configured limit.</li></ol>
+<h2>3. A narrow deterministic tool</h2><pre><code id="tool">def calculate_stress(force_n: float, area_m2: float) -&gt; dict[str, float | str]:
+    """Calculate uniform axial stress and return MPa."""
+    if force_n &lt; 0:
+        raise ValueError("force_n must not be negative")
+    if area_m2 &lt;= 0:
+        raise ValueError("area_m2 must be positive")
+    return {
+        "value": force_n / area_m2 / 1_000_000,
+        "unit": "MPa",
+        "formula": "stress = force_n / area_m2",
+    }</code></pre><button data-copy-code="#tool">Copy code</button><p>The function name says what it does. Argument names include units. Type hints describe input shape. The docstring explains meaning. Validation rejects physically invalid values. The structured result can be tested and logged.</p>
+<h2>4. Schemas are contracts</h2><p>A tool schema states its name, description, arguments, types, required fields, and sometimes ranges. It helps a model form a valid request, but it does not prove the request is safe or physically meaningful. Your Python function must check the inputs again.</p>
+<h2>5. Use an allowlist</h2><pre><code id="allowlist">TOOL_FUNCTIONS = {"calculate_stress": calculate_stress}
+
+if requested_name not in TOOL_FUNCTIONS:
+    return {"status": "refused", "reason": "Unknown tool"}
+result = TOOL_FUNCTIONS[requested_name](**validated_arguments)</code></pre><button data-copy-code="#allowlist">Copy code</button><p>An allowlist prevents generated text from naming arbitrary functions, system commands, or file operations. Never evaluate model output with <code>eval()</code> or <code>exec()</code>.</p>
+<h2>6. Missing data and failures are states</h2><p>If the force is present but the area or its unit is absent, return <code>needs_input</code> and ask one question. Use <code>invalid_input</code> for bad values and <code>refused</code> for unsupported work. These states are easier to test than vague error prose.</p>
+<h2>7. Action logs and observability</h2><p>Record time, selected tool, validated arguments, units, status, result, duration, and errors. Never log API keys or unnecessary sensitive data. A log explains what the software actually did; a model-generated explanation is not a substitute.</p>
+<div class="warning">Tool access is authority. Give the agent only the tools, credentials, data, and network access required for its narrow purpose.</div>
+<div class="exercise"><h2>Try it yourself</h2><p>Run <code>examples/engineering_agent.py</code>. Add a pressure tool, reject missing or unknown units, and add tests for successful, incomplete, invalid, and refused requests.</p></div>
+<h2>Check your understanding</h2><ol><li>How is an agent different from a chatbot?</li><li>Why validate after using a schema?</li><li>What does an allowlist prevent?</li><li>Which data must be excluded from logs?</li></ol>
+<h2>Further reading</h2><ul><li><a href="https://docs.python.org/3.14/library/typing.html" target="_blank" rel="noopener">Python 3.14 typing</a></li><li><a href="https://docs.python.org/3.14/library/json.html" target="_blank" rel="noopener">Python 3.14 JSON</a></li><li><a href="https://docs.python.org/3.14/library/logging.html" target="_blank" rel="noopener">Python 3.14 logging</a></li></ul>
+</main><script src="../../assets/js/course.js" defer></script><footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer></body></html>

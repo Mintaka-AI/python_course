@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python while Loops</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="06_for_loops.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="08_collections.html">Next →</a></p>
+  <p><a href="../examples/07_while_loops.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/07_while_loops.py</code>.</p>
+  <h1>Python while Loops</h1>
+  <p>A <code>while</code> loop repeats while its condition is <code>True</code>. Use it when repetition depends on a changing condition, not simply on every item in a list.</p>
+
+  <h2>A counter with a clear end</h2>
+  <pre><code id="while-example">pressure_bar = 0
+maximum_pressure_bar = 5
+
+while pressure_bar &lt;= maximum_pressure_bar:
+    print(f"Pressure: {pressure_bar} bar")
+    pressure_bar = pressure_bar + 1</code></pre>
+  <button data-copy-code="#while-example">Copy code</button>
+  <p><strong>Expected output:</strong> pressure values from 0 through 5 bar. After printing 5, the counter becomes 6, so the condition is false and the loop stops.</p>
+
+  <h2>Safe termination</h2>
+  <p>Every <code>while</code> loop needs a path to a false condition. A counter, a maximum number of attempts, or a changed measurement can provide that path.</p>
+  <pre><code id="safe-termination">target_temperature_c = 60
+temperature_c = 20
+step = 0
+maximum_steps = 10
+
+while temperature_c &lt; target_temperature_c and step &lt; maximum_steps:
+    temperature_c += 5
+    step += 1
+    print(f"Step {step}: {temperature_c} °C")
+
+if temperature_c &gt;= target_temperature_c:
+    print("Target reached.")
+else:
+    print("Stopped after the safe step limit.")</code></pre>
+  <button data-copy-code="#safe-termination">Copy code</button>
+  <p><strong>Expected output:</strong> eight heating steps end at 60 °C, followed by <code>Target reached.</code>. The maximum-step check prevents accidental endless repetition if the temperature never rises.</p>
+
+  <h2>Validate user input</h2>
+  <pre><code id="validate-loop">diameter_mm = float(input("Diameter in mm: "))
+
+while diameter_mm &lt;= 0:
+    print("Diameter must be greater than zero.")
+    diameter_mm = float(input("Diameter in mm: "))
+
+print(f"Accepted: {diameter_mm} mm")</code></pre>
+  <button data-copy-code="#validate-loop">Copy code</button>
+  <p><strong>Expected output:</strong> invalid zero or negative values show the message and ask again. A positive value exits the loop and prints the accepted diameter.</p>
+
+  <h2>break, continue, and else</h2>
+  <p>You can use <code>break</code>, <code>continue</code>, and loop <code>else</code> with <code>while</code> too.</p>
+  <pre><code id="while-else">attempt = 1
+maximum_attempts = 3
+
+while attempt &lt;= maximum_attempts:
+    reading = 4.5 + attempt
+    if reading &gt; 6.0:
+        print(f"Limit found on attempt {attempt}")
+        break
+    attempt += 1
+else:
+    print("No limit was found.")</code></pre>
+  <button data-copy-code="#while-else">Copy code</button>
+  <p><strong>Expected output:</strong> attempt 1 gives 5.5, then attempt 2 gives 6.5 and prints <code>Limit found on attempt 2</code>. The <code>else</code> does not run because <code>break</code> was used.</p>
+
+  <div class="note">For a fixed number of repetitions, a <code>for</code> loop with <code>range()</code> is often clearer. Use <code>while</code> when the condition is the important part.</div>
+  <div class="warning">Never write <code>while True</code> unless the loop has a reliable <code>break</code> condition. During learning, prefer a visible limit such as <code>maximum_attempts</code>.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>Start with <code>tank_litres = 0</code>. Add 12 litres on each loop pass until the tank reaches at least 50 litres. Print each level. Include a maximum of 10 fills and print whether the target was reached.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What must change for a <code>while</code> loop to stop?</li><li>Why is a maximum-attempt counter useful?</li><li>When does the <code>else</code> block of a <code>while</code> loop run?</li><li>When is <code>for</code> usually a better choice than <code>while</code>?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/reference/compound_stmts.html#the-while-statement" target="_blank" rel="noopener">Python 3.14: while statement</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

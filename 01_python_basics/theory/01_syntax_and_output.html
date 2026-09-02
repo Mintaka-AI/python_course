@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Syntax and Output</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="index.html">Module 1 index</a> · <a href="02_variables_and_types.html">Next →</a></p>
+  <p><a href="../examples/01_syntax_and_output.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/01_syntax_and_output.py</code>.</p>
+  <h1>Python Syntax, Comments, and Output</h1>
+  <p class="subtitle">Write a small Python program, run it in UCRT64, and read its output.</p>
+
+  <h2>Run a Python file in UCRT64</h2>
+  <p>Save your code in a file ending in <code>.py</code>, for example <code>force_check.py</code>. Open the <strong>MSYS2 UCRT64</strong> terminal in that folder and run:</p>
+  <pre><code id="run-example">python force_check.py</code></pre>
+  <button data-copy-code="#run-example">Copy command</button>
+  <p><code>python</code> starts the UCRT64 Python interpreter and the file name tells it which program to run. Check the interpreter first with <code>python --version</code> if a command does not work.</p>
+  <div class="note"><strong>Keep one terminal environment.</strong> This course uses MSYS2 UCRT64. Do not switch between several Python installations while learning, because packages and versions can differ.</div>
+
+  <h2>Statements and expressions</h2>
+  <p>Python reads a program from top to bottom. A <strong>statement</strong> tells Python to do something. An <strong>expression</strong> produces a value.</p>
+  <pre><code id="statement-expression">force_n = 1_200       # assignment statement
+area_m2 = 0.02        # assignment statement
+stress_pa = force_n / area_m2  # division expression
+
+print(stress_pa)      # function-call statement</code></pre>
+  <button data-copy-code="#statement-expression">Copy code</button>
+  <p>Here, <code>force_n / area_m2</code> is an expression: it produces <code>60000.0</code>. The whole line that stores it in <code>stress_pa</code> is a statement.</p>
+
+  <h2>Print output</h2>
+  <p><code>print()</code> displays text and values in the terminal. Separate items with commas; Python places a space between them.</p>
+  <pre><code id="print-example">print("Calculation started")
+force_n = 1_200
+print(force_n)
+print("Force:", force_n, "N")</code></pre>
+  <button data-copy-code="#print-example">Copy code</button>
+  <p>Expected output:</p>
+  <pre><code>Calculation started
+1200
+Force: 1200 N</code></pre>
+  <p>The first line prints text. The second prints the number. The final call combines text, the value, and its unit.</p>
+
+  <h2>Comments and indentation</h2>
+  <p>A comment starts with <code>#</code>. Python ignores it. Use comments to explain a calculation choice or a unit conversion.</p>
+  <pre><code id="comment-example"># Convert kilonewtons to newtons before calculating stress.
+force_n = 12.5 * 1_000</code></pre>
+  <button data-copy-code="#comment-example">Copy code</button>
+  <p>Indentation is the spaces at the beginning of a line. Later, it groups code under <code>if</code>, loops, and functions. Use four spaces for each level.</p>
+  <div class="warning"><strong>Indentation matters.</strong> Do not mix tabs and spaces. A missing or extra indentation can cause an <code>IndentationError</code>.</div>
+
+  <h2>When Python reports an error</h2>
+  <p>A <strong>traceback</strong> is Python's error report. Read the last line first: it gives the error type and a short reason. The lines above help you locate the file and line.</p>
+  <pre><code>File "force_check.py", line 2
+    print(force_n
+         ^
+SyntaxError: '(' was never closed</code></pre>
+  <p>This report says that line 2 has an opening parenthesis without a closing one. Fix that line, save the file, and run it again.</p>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Create <code>hello_engineer.py</code>. Add a comment, assign a mass in kilograms, and print <code>Mass: 25 kg</code>. Run it with <code>python hello_engineer.py</code> in UCRT64.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Which UCRT64 command runs <code>hello_engineer.py</code>?</li><li>Is <code>5 * 3</code> a statement or an expression?</li><li>What does <code>print()</code> do?</li><li>Which traceback line should you read first?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/introduction.html" target="_blank" rel="noopener">Python 3.14: an informal introduction</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

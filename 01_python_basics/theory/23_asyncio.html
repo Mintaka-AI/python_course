@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Async Await and asyncio</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="22_concurrency_concepts.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="24_engineering_agent_patterns.html">Next →</a></p>
+  <p><a href="../examples/23_asyncio.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/23_asyncio.py</code>.</p>
+  <h1>Async, Await, and asyncio</h1>
+  <p>Asynchronous Python lets one program make progress on other waiting tasks. It does not turn a slow numerical calculation into a faster calculation; it is mainly useful when a task spends time waiting.</p>
+  <div class="note"><strong>Prerequisite:</strong> understand functions and the concurrency ideas in lesson 22. Use asynchronous code only when you have several independent waiting tasks and an async-capable library.</div>
+
+  <h2>Three new words</h2>
+  <p><code>async def</code> defines a coroutine function. Calling it creates a coroutine object; it does not immediately run all its code. <code>await</code> pauses that coroutine while another ready coroutine can run. <code>asyncio.run()</code> starts the event loop for a top-level program.</p>
+  <pre><code id="async-syntax">import asyncio
+
+async def inspect_part(part_id):
+    await asyncio.sleep(0.1)  # simulated wait
+    return f"{part_id}: complete"
+
+async def main():
+    result = await inspect_part("P-01")
+    print(result)
+
+asyncio.run(main())</code></pre>
+  <button data-copy-code="#async-syntax">Copy code</button>
+  <p><strong>Expected output:</strong> <code>P-01: complete</code>. The sleep is only a safe simulation; no external service is contacted.</p>
+
+  <h2>Start independent tasks together</h2>
+  <pre><code id="gather-syntax">import asyncio
+
+async def inspect_part(part_id):
+    await asyncio.sleep(0.1)
+    return f"{part_id}: complete"
+
+async def main():
+    reports = await asyncio.gather(
+        inspect_part("P-01"),
+        inspect_part("P-02"),
+        inspect_part("P-03"),
+    )
+    for report in reports:
+        print(report)
+
+asyncio.run(main())</code></pre>
+  <button data-copy-code="#gather-syntax">Copy code</button>
+  <p><strong>Expected output:</strong> three lines, from <code>P-01: complete</code> through <code>P-03: complete</code>. <code>asyncio.gather()</code> waits for all supplied awaitables. Its returned list follows the input order, even when individual tasks finish in a different order.</p>
+
+  <h2>Keep calculations ordinary and deterministic</h2>
+  <p>Do numerical work in normal, testable functions. An async function can await a simulated or real waiting operation and then pass validated numbers to the calculation.</p>
+  <pre><code id="calculation-separation">import asyncio
+
+def pressure_pa(force_n, area_m2):
+    return force_n / area_m2
+
+async def inspect_then_calculate():
+    await asyncio.sleep(0.1)
+    return pressure_pa(12000, 0.006)
+
+print(asyncio.run(inspect_then_calculate()))</code></pre>
+  <button data-copy-code="#calculation-separation">Copy code</button>
+  <p><strong>Expected output:</strong> <code>2000000.0</code>.</p>
+  <div class="warning"><strong>Warning:</strong> do not call blocking work such as <code>time.sleep()</code>, a long CPU loop, or ordinary blocking I/O directly inside an async function. It stops the event loop and prevents other coroutines from running. Also handle timeouts and failures when real I/O is introduced.</div>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Write an <code>async def</code> function that simulates checking a named pump with <code>asyncio.sleep()</code> and returns a status string. Start checks for three pumps with <code>asyncio.gather()</code>. Keep the result formatting outside the check function.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What keyword defines a coroutine function?</li><li>What does <code>await</code> allow while a coroutine is waiting?</li><li>What order does <code>asyncio.gather()</code> return results in?</li><li>Why is <code>time.sleep()</code> a poor choice inside an async coroutine?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/asyncio.html" target="_blank" rel="noopener">Python 3.14: asyncio</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

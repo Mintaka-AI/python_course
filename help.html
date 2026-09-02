@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Study with an AI Instructor</title>
+  <link rel="stylesheet" href="assets/css/course.css">
+</head>
+<body>
+  <header>
+    <h1>How to Study with an AI Instructor</h1>
+    <p class="subtitle">Using Codex or Cline in VS Code with this course</p>
+    <p><a href="index.html">← Course menu</a> · <a href="summary.html">Progress dashboard</a></p>
+  </header>
+
+  <main>
+    <div class="note">
+      The AI agent can act as a lecturer or as an instructor. A lecturer explains a topic.
+      An instructor also asks questions, reviews your work, gives exercises, and updates
+      <code>state.json</code> after assessment.
+    </div>
+
+    <h2>1. Open the correct folder in VS Code</h2>
+    <p>Open the course root as the VS Code workspace:</p>
+    <pre><code>C:/msys64/home/user1/projects/cources/python_cource1</code></pre>
+    <p>This is important because the AI agent must be able to find:</p>
+    <ul>
+      <li><code>AGENTS.md</code> — the main instructor instructions;</li>
+      <li><code>state.json</code> — your current progress;</li>
+      <li><code>Docs/plan.md</code> — the course plan;</li>
+      <li>each module's <code>theory/</code> and <code>examples/</code> folders;</li>
+      <li><code>.cursor/rules/</code> and <code>.cursor/skills/</code> — additional course workflow rules.</li>
+    </ul>
+    <div class="warning">Do not open only one module folder. The agent needs the complete course root to read the instructions and update progress correctly.</div>
+
+    <h2>2. Start the AI agent as an instructor</h2>
+    <p>Open Codex or Cline in VS Code and start a new task or chat. Send this prompt:</p>
+    <pre><code id="instructor-prompt">Act as my instructor for this Python course.
+
+Before teaching:
+1. Read AGENTS.md.
+2. Read state.json and Docs/plan.md.
+3. Read the relevant rules in .cursor/rules/ and the course instructor skill.
+4. Identify my current module from course.current_module.
+
+For each lesson:
+- open the next local HTML theory lesson in the internal browser;
+- explain the theory in simple English and define every new term;
+- show how the theory connects to the files in examples/;
+- help me run examples in the MSYS2 UCRT64 terminal;
+- explain the code step by step, but let me think and answer first;
+- ask 2–4 understanding questions and wait for my answers;
+- calculate my theory score after I answer;
+- give me one practical task, review my solution, and provide hints before a full solution;
+- update state.json only after an actual review, following Docs/state-schema.md;
+- do not move to the next module until theory, examples, and code are all mastered.
+
+Start by telling me my current module and the next lesson. Do not mark anything as mastered yet.</code></pre>
+    <button data-copy-code="#instructor-prompt">Copy instructor prompt</button>
+
+    <h3>Short prompt for later sessions</h3>
+    <pre><code id="continue-prompt">Continue my Python course as the instructor. Read AGENTS.md and state.json first, then continue the current module from the next incomplete lesson.</code></pre>
+    <button data-copy-code="#continue-prompt">Copy short prompt</button>
+
+    <h2>3. Use lecturer mode when you only need an explanation</h2>
+    <p>Lecturer mode is useful when you want to revisit a difficult topic without taking an assessment.</p>
+    <pre><code id="lecturer-prompt">Act as a lecturer for this course. Read the current lesson and explain it in simple English with an engineering example. Open the local HTML lesson in the internal browser and explain the example code step by step. Do not assess mastery or update state.json in this session.</code></pre>
+    <button data-copy-code="#lecturer-prompt">Copy lecturer prompt</button>
+
+    <h2>4. Open theory in the internal browser</h2>
+    <p>Each module has a theory index, for example:</p>
+    <pre><code>01_python_basics/theory/index.html
+02_engineering_code/theory/index.html
+06_engineering_ai_agents/theory/index.html</code></pre>
+    <p>Ask the agent:</p>
+    <pre><code id="browser-prompt">Open the current module's theory/index.html in the internal browser. Then open the next lesson and teach it to me section by section.</code></pre>
+    <button data-copy-code="#browser-prompt">Copy browser prompt</button>
+    <p>In Codex, the agent can open a workspace file in the built-in browser or file panel. In a VS Code setup where the agent cannot control a browser directly, use the Command Palette and run <strong>Simple Browser: Show</strong>, then paste the local URL supplied by the agent.</p>
+
+    <h3>Direct file or local web server?</h3>
+    <ul>
+      <li>Individual theory pages can normally be opened directly as local HTML files.</li>
+      <li>The progress dashboard loads <code>state.json</code> with JavaScript. Browsers may block that request from a <code>file://</code> page.</li>
+      <li>For the dashboard, start a local server and open its HTTP address.</li>
+    </ul>
+    <pre><code>cd /c/msys64/home/user1/projects/cources/python_cource1
+python -m http.server 8000</code></pre>
+    <p>Then open <code>http://localhost:8000/index.html</code> or <code>http://localhost:8000/summary.html</code> in the internal browser. Stop the server with <kbd>Ctrl</kbd>+<kbd>C</kbd>.</p>
+
+    <h2>5. Configure the MSYS2 UCRT64 terminal</h2>
+    <p>All course commands must run in <strong>MSYS2 UCRT64</strong>, not PowerShell, Command Prompt, MSYS, or MINGW64.</p>
+    <ol>
+      <li>In VS Code, open <strong>Terminal → New Terminal</strong>.</li>
+      <li>Select the terminal profile named <strong>MSYS2 UCRT64</strong>.</li>
+      <li>Navigate to the course root.</li>
+      <li>Create and activate the virtual environment if it does not exist.</li>
+      <li>Verify which Python executable is active.</li>
+    </ol>
+    <pre><code id="terminal-setup">cd /c/msys64/home/user1/projects/cources/python_cource1
+python -m venv .venv
+source .venv/Scripts/activate
+python --version
+python -m pip --version
+which python</code></pre>
+    <button data-copy-code="#terminal-setup">Copy terminal setup</button>
+    <p>The result of <code>which python</code> should point to the course's <code>.venv</code> or to the UCRT64 Python installation.</p>
+
+    <h2>6. Study an example with the agent</h2>
+    <p>Do not ask only for the final output. Ask the agent to connect the example to the theory and make you predict what happens.</p>
+    <pre><code id="example-prompt">Open the example for this lesson. First explain its goal and inputs. Then walk through it in small sections and ask me what important lines do. Help me run it in the MSYS2 UCRT64 terminal. After it runs, explain the output and give me one small modification to make myself.</code></pre>
+    <button data-copy-code="#example-prompt">Copy example prompt</button>
+    <p>A typical run command is:</p>
+    <pre><code>cd /c/msys64/home/user1/projects/cources/python_cource1/01_python_basics/examples
+python 02_variables_and_types.py</code></pre>
+    <p>For tests, follow the module README. A common command is:</p>
+    <pre><code>python -m pytest test_file_name.py -q</code></pre>
+    <div class="note">If a package is missing, ask the agent to explain what it is and install it into the active course virtual environment with <code>python -m pip install package-name</code>.</div>
+
+    <h2>7. Questions, exercises, and feedback</h2>
+    <p>The instructor should use this order:</p>
+    <ol>
+      <li>Explain one theory topic.</li>
+      <li>Ask 2–4 questions and wait for your answers.</li>
+      <li>Score the answers. Theory is mastered at 75% or higher.</li>
+      <li>Walk through a runnable example.</li>
+      <li>Ask you to explain or modify the example.</li>
+      <li>Give one practical coding task.</li>
+      <li>Review your program by reading it and running appropriate checks.</li>
+      <li>Update progress with specific notes.</li>
+    </ol>
+    <p>If your answer is wrong, the instructor should explain the weak point differently and ask a new question. For a coding task, it should provide hints before giving complete code.</p>
+
+    <h2>8. How state.json must be updated</h2>
+    <p><code>state.json</code> is the course record. The agent must read it at the beginning of every session and edit it only after an observable learning event.</p>
+    <table>
+      <thead><tr><th>Learning event</th><th>Fields to update</th></tr></thead>
+      <tbody>
+        <tr><td>Module started</td><td><code>status</code> and <code>course.last_session</code></td></tr>
+        <tr><td>Theory answers reviewed</td><td><code>score</code>, <code>mastered</code>, <code>attempts</code>, <code>last_checked</code>, <code>notes</code></td></tr>
+        <tr><td>Example explained or modified</td><td><code>examples.completed</code> and the example review fields</td></tr>
+        <tr><td>Practical code reviewed</td><td><code>code.completed</code> and the code review fields</td></tr>
+        <tr><td>All three blocks mastered</td><td>Complete the module and move <code>course.current_module</code> forward</td></tr>
+      </tbody>
+    </table>
+    <p>Required rules:</p>
+    <ul>
+      <li>Increment <code>attempts</code> on every review.</li>
+      <li>Use an ISO 8601 date and time.</li>
+      <li>Write a specific note about strengths or gaps.</li>
+      <li>Preserve every module and field.</li>
+      <li>Keep valid JSON: double quotes and no trailing commas.</li>
+      <li>Do not mark theory, examples, or code as mastered without evidence.</li>
+    </ul>
+    <div class="warning">Opening a lesson or running a supplied example is not enough to mark the whole module as mastered. Progress changes only after the corresponding review.</div>
+
+    <h2>9. End-of-session prompt</h2>
+    <pre><code id="end-prompt">Summarize what I studied today. Show my theory, examples, and code review results. Update state.json only for work you actually reviewed, validate that it is still correct JSON, and tell me the next incomplete step without starting a new module early.</code></pre>
+    <button data-copy-code="#end-prompt">Copy end-of-session prompt</button>
+
+    <h2>10. Recommended study conversation</h2>
+    <table>
+      <thead><tr><th>You</th><th>AI instructor</th></tr></thead>
+      <tbody>
+        <tr><td>“Continue my course.”</td><td>Reads instructions and progress, then identifies the next lesson.</td></tr>
+        <tr><td>“Open the theory.”</td><td>Opens the local HTML page and explains one section at a time.</td></tr>
+        <tr><td>You answer 2–4 questions.</td><td>Reviews the answers and records the score.</td></tr>
+        <tr><td>“Show me the example.”</td><td>Explains it, helps run it in UCRT64, and asks you to modify it.</td></tr>
+        <tr><td>You submit your solution.</td><td>Runs appropriate checks, reviews it, gives feedback, and updates progress.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Course instruction files</h2>
+    <ul>
+      <li><a href="AGENTS.md">AGENTS.md</a></li>
+      <li><a href="Docs/plan.md">Course plan</a></li>
+      <li><a href="Docs/state-schema.md">Progress data schema</a></li>
+      <li><a href="state.json">Current progress data</a></li>
+    </ul>
+  </main>
+
+  <script src="assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

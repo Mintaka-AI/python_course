@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Course — Progress Summary</title>
+  <link rel="stylesheet" href="assets/css/course.css">
+</head>
+<body>
+  <header>
+    <h1>Python Course Progress</h1>
+    <p class="subtitle">Engineering AI Agents — student dashboard</p>
+    <p><a href="index.html">Open course menu</a> · <a href="help.html">AI instructor help</a></p>
+  </header>
+
+  <div id="course-summary" class="course-summary" aria-live="polite">
+    <p class="loading">Loading progress...</p>
+  </div>
+
+  <script src="assets/js/course.js" defer></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      initCourseSummary("#course-summary", "state.json");
+    });
+  </script>
+
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

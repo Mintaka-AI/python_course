@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Variables and Types</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="01_syntax_and_output.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="03_operators.html">Next →</a></p>
+  <p><a href="../examples/02_variables_and_types.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/02_variables_and_types.py</code>.</p>
+  <h1>Variables, Data Types, and Casting</h1>
+  <p class="subtitle">Store engineering values with meaningful names and use the right kind of value.</p>
+
+  <h2>Variables and assignment</h2>
+  <p>A variable is a name that refers to a value. Create one with <code>=</code>; this is called assignment. A later assignment replaces its old value.</p>
+  <pre><code id="variable-example">length_m = 2.5
+length_m = 3.0
+print(length_m)</code></pre>
+  <button data-copy-code="#variable-example">Copy code</button>
+  <p>Expected output: <code>3.0</code>. Python uses the latest value assigned to <code>length_m</code>.</p>
+  <div class="note">Use <code>snake_case</code>: lower-case words separated by underscores. Include units in physical names, for example <code>pressure_pa</code>, <code>mass_kg</code>, and <code>length_m</code>.</div>
+
+  <h2>Variable naming rules</h2>
+  <ul>
+    <li>Names may contain letters, digits, and underscores, but cannot begin with a digit.</li>
+    <li>Spaces and hyphens are not allowed.</li>
+    <li>Names are case-sensitive: <code>force_n</code> and <code>Force_n</code> differ.</li>
+    <li>Do not use Python keywords such as <code>if</code>, <code>for</code>, or <code>def</code>.</li>
+  </ul>
+
+  <h2>Basic built-in types</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Use</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><code>int</code></td><td>Whole number</td><td><code>bolt_count = 8</code></td></tr>
+      <tr><td><code>float</code></td><td>Decimal number</td><td><code>diameter_mm = 12.5</code></td></tr>
+      <tr><td><code>str</code></td><td>Text</td><td><code>material = "Steel"</code></td></tr>
+      <tr><td><code>bool</code></td><td>True or false</td><td><code>is_safe = True</code></td></tr>
+      <tr><td><code>NoneType</code></td><td>No value yet</td><td><code>result = None</code></td></tr>
+    </tbody>
+  </table>
+  <p>Use <code>type(value)</code> to inspect a value's type while debugging.</p>
+
+  <h2>Text and f-strings</h2>
+  <p>A string is text inside single or double quotes. An <strong>f-string</strong> starts with <code>f</code> and inserts a value inside braces.</p>
+  <pre><code id="f-string-example">material = "Aluminium"
+density_kg_m3 = 2700
+
+print(f"Material: {material}")
+print(f"Density: {density_kg_m3} kg/m³")</code></pre>
+  <button data-copy-code="#f-string-example">Copy code</button>
+  <p>Expected output includes <code>Material: Aluminium</code> and <code>Density: 2700 kg/m³</code>. The expressions inside <code>{}</code> are evaluated before printing.</p>
+
+  <h2>Convert values deliberately</h2>
+  <p><code>int()</code>, <code>float()</code>, <code>str()</code>, and <code>bool()</code> convert values. For example, <code>int(12.9)</code> gives <code>12</code>; it removes the decimal part rather than rounding it.</p>
+  <pre><code id="casting-example">whole_value = int(12.9)
+decimal_value = float(12)
+text_value = str(12)
+
+print(whole_value)
+print(decimal_value)
+print(text_value)</code></pre>
+  <button data-copy-code="#casting-example">Copy code</button>
+
+  <h2>Truthiness and float precision</h2>
+  <p>In a Boolean context, zero, an empty string, and <code>None</code> are false-like. Most other values are true-like.</p>
+  <pre><code id="truthiness-example">print(bool(0))
+print(bool(""))
+print(bool(5))</code></pre>
+  <button data-copy-code="#truthiness-example">Copy code</button>
+  <p>Expected output is <code>False</code>, <code>False</code>, then <code>True</code>.</p>
+  <div class="warning"><strong>Decimal values are approximations.</strong> Computers store many floats approximately, so <code>0.1 + 0.2 == 0.3</code> can be <code>False</code>. Round displayed values with <code>round(value, 2)</code>; do not rely on exact float equality in measurements.</div>
+
+  <h2>Runnable engineering example</h2>
+  <pre><code id="engineering-example">STANDARD_GRAVITY_M_S2 = 9.80665
+mass_kg = 12.5
+weight_n = mass_kg * STANDARD_GRAVITY_M_S2
+
+print(f"Mass: {mass_kg} kg")
+print(f"Weight: {weight_n:.2f} N")</code></pre>
+  <button data-copy-code="#engineering-example">Copy code</button>
+  <p>Expected output ends with <code>Weight: 122.58 N</code>. The <code>:.2f</code> part displays the float with two decimal places.</p>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Create variables for a material name, density in kg/m³, and whether it is recyclable. Print a two-line f-string report. Then use <code>type()</code> to inspect the density.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What does assignment with <code>=</code> do?</li><li>Why is <code>force_n</code> clearer than <code>x</code>?</li><li>What do braces do in an f-string?</li><li>Why should you be careful when comparing floats exactly?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/stdtypes.html" target="_blank" rel="noopener">Python 3.14: built-in types</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

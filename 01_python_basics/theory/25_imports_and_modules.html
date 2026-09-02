@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Imports and Modules</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="12_comprehensions_preview.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="26_paths_and_files.html">Next →</a></p>
+  <h1>Imports and Modules</h1>
+  <p>A module is a Python file containing reusable code. An import lets your program use names from that file or from Python's standard library.</p>
+  <pre><code id="import-example">import math
+
+radius_m = 0.5
+circle_area_m2 = math.pi * radius_m ** 2
+print(f"Area: {circle_area_m2:.3f} m²")</code></pre>
+  <button data-copy-code="#import-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>Area: 0.785 m²</code>. <code>math.pi</code> means the name <code>pi</code> inside the <code>math</code> module.</p>
+  <pre><code id="from-import">from math import sqrt
+
+length_m = sqrt(9)
+print(length_m)</code></pre>
+  <button data-copy-code="#from-import">Copy code</button>
+  <p><strong>Expected output:</strong> <code>3.0</code>. This form imports one named tool. Prefer clear imports; avoid <code>from module import *</code> because it hides where names came from.</p>
+  <div class="note">Put reusable functions in a separate <code>.py</code> module and import them by file name without <code>.py</code>. Module 2 teaches project layout and tests in depth.</div>
+  <p><a href="../examples/25_imports_and_modules.py">Open matching source</a> — opening shows source only; run it from MSYS2 UCRT64 with <code>python examples/25_imports_and_modules.py</code>.</p>
+  <div class="exercise"><h2>Try it yourself</h2><p>Import <code>math</code>, calculate the area of a circle with radius 2 m, and print the result with two decimal places.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What is a module?</li><li>What does <code>import math</code> make available?</li><li>Why is <code>import *</code> hard to read?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/modules.html" target="_blank" rel="noopener">Python 3.14: modules</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

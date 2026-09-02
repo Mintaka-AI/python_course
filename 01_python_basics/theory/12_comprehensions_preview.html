@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comprehensions Preview</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="11_running_and_debugging.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="13_iterators_generators.html">Next →</a></p>
+  <p><a href="../examples/12_comprehensions_preview.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/12_comprehensions_preview.py</code>.</p>
+  <h1>Comprehensions: an Advanced Preview</h1>
+  <p>A comprehension is a short way to build a collection from another collection. It is useful, but a regular <code>for</code> loop is often easier to learn and debug. This page is a preview, not a requirement to memorize.</p>
+
+  <h2>From a loop to a list comprehension</h2>
+  <pre><code id="loop-version">loads_kn = [2, 4, 6]
+loads_n = []
+
+for load_kn in loads_kn:
+    loads_n.append(load_kn * 1000)
+
+print(loads_n)</code></pre>
+  <button data-copy-code="#loop-version">Copy code</button>
+  <p><strong>Expected output:</strong> <code>[2000, 4000, 6000]</code>. The loop builds a new list one converted value at a time.</p>
+  <pre><code id="list-comprehension">loads_kn = [2, 4, 6]
+loads_n = [load_kn * 1000 for load_kn in loads_kn]
+
+print(loads_n)</code></pre>
+  <button data-copy-code="#list-comprehension">Copy code</button>
+  <p><strong>Expected output:</strong> the same list, <code>[2000, 4000, 6000]</code>. Read the expression as: “make <code>load_kn * 1000</code> for each <code>load_kn</code> in <code>loads_kn</code>.”</p>
+
+  <h2>Filter with an if condition</h2>
+  <pre><code id="filtered-comprehension">temperatures_c = [-5, 8, 20, -2, 15]
+above_freezing_c = [
+    temperature_c
+    for temperature_c in temperatures_c
+    if temperature_c >= 0
+]
+
+print(above_freezing_c)</code></pre>
+  <button data-copy-code="#filtered-comprehension">Copy code</button>
+  <p><strong>Expected output:</strong> <code>[8, 20, 15]</code>. Only values meeting the condition become items in the new list.</p>
+
+  <h2>Set and dictionary comprehensions</h2>
+  <pre><code id="set-dict-comprehension">sensor_ids = ["A1", "A2", "A1", "A3"]
+unique_sensor_ids = {sensor_id for sensor_id in sensor_ids}
+
+loads_kn = [2, 4, 6]
+load_by_test = {
+    test_number: load_kn
+    for test_number, load_kn in enumerate(loads_kn, start=1)
+}
+
+print(unique_sensor_ids)
+print(load_by_test)</code></pre>
+  <button data-copy-code="#set-dict-comprehension">Copy code</button>
+  <p><strong>Expected output:</strong> the set contains <code>A1</code>, <code>A2</code>, and <code>A3</code> once each (its display order may differ). The dictionary is <code>{1: 2, 2: 4, 3: 6}</code>.</p>
+
+  <div class="note">Comprehensions are best when the operation is short and obvious. Keep the normal loop version when it communicates the work more clearly.</div>
+  <div class="warning">Avoid deeply nested comprehensions and complicated conditions at this stage. They can be difficult to read, explain, and debug.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>Given <code>lengths_m = [0.5, 1.0, 1.5, 2.0]</code>, create a list of lengths in millimetres with a comprehension. Then create another list containing only values greater than or equal to 1000 mm. First write the equivalent <code>for</code> loop so you can compare them.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What collection does <code>[expression for item in values]</code> create?</li><li>Where does the filter condition go in a list comprehension?</li><li>Why might a normal <code>for</code> loop be better than a long comprehension?</li><li>Why might a set comprehension be useful for sensor IDs?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/datastructures.html#list-comprehensions" target="_blank" rel="noopener">Python 3.14: list comprehensions</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

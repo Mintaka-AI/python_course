@@ -1,0 +1,17 @@
+{
+  "status": "ok",
+  "tool": "calculate_stress",
+  "arguments": {
+    "force_n": 120000.0,
+    "area_m2": 0.0008
+  },
+  "result": {
+    "value": 150.0,
+    "unit": "MPa",
+    "formula": "stress = force_n / area_m2"
+  },
+  "time": "2026-09-02T19:32:27.604470+00:00",
+  "limitations": [
+    "Educational result; qualified engineering review required."
+  ]
+}

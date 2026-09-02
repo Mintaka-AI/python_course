@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Paths and Files</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="25_imports_and_modules.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="27_try_except_basics.html">Next →</a></p>
+  <h1>Simple Paths and File I/O</h1>
+  <p>A path tells Python where a file is. File I/O means input and output: reading data from a file or writing text to one.</p>
+  <pre><code id="write-file">from pathlib import Path
+
+report_path = Path("report.txt")
+with report_path.open("w", encoding="utf-8") as report_file:
+    report_file.write("Load: 1200 N\n")
+
+print(report_path.exists())</code></pre>
+  <button data-copy-code="#write-file">Copy code</button>
+  <p><strong>Expected output:</strong> <code>True</code>. The code creates <code>report.txt</code> beside the program. <code>with</code> closes the file when its indented block ends, even if an error occurs.</p>
+  <pre><code id="read-file">from pathlib import Path
+
+report_path = Path("report.txt")
+with report_path.open(encoding="utf-8") as report_file:
+    report_text = report_file.read()
+
+print(report_text)</code></pre>
+  <button data-copy-code="#read-file">Copy code</button>
+  <p><strong>Expected output:</strong> <code>Load: 1200 N</code> on its own line, if the first example created the file.</p>
+  <div class="warning">Use a relative path such as <code>Path("report.txt")</code> for a small project. Do not assume a file exists or accept an untrusted path without validation.</div>
+  <div class="note">This is the basic pattern only. Module 2 covers CSV and JSON files, safer validation, and deeper practice.</div>
+  <p><a href="../examples/11_running_and_debugging.py">Open matching file-running source</a> — opening shows source only; run it from MSYS2 UCRT64 with <code>python examples/11_running_and_debugging.py</code>.</p>
+  <div class="exercise"><h2>Try it yourself</h2><p>Write <code>material.txt</code> containing one material name, then read it and print <code>Material: ...</code>.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What does a path identify?</li><li>Why use <code>with</code> when opening a file?</li><li>What does <code>"w"</code> mean?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/pathlib.html" target="_blank" rel="noopener">Python 3.14: pathlib</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

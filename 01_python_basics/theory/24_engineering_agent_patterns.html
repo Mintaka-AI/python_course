@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Agent Patterns</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="23_asyncio.html">← Previous</a> · <a href="index.html">Module 1 index</a></p>
+  <p><a href="../examples/24_engineering_agent_patterns.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/24_engineering_agent_patterns.py</code>.</p>
+  <h1>Engineering Agent Patterns</h1>
+  <p>An engineering agent is a program that selects steps toward a goal. Its most important safety pattern is separation: text can describe a plan, but a deterministic tool function performs numerical engineering calculations.</p>
+  <div class="note"><strong>Prerequisite:</strong> understand functions, dictionaries, validation, and return values. This lesson uses a local simulation only: no network calls, external APIs, credentials, or secrets.</div>
+
+  <h2>A simple local pattern</h2>
+  <pre><code>Request text
+    ↓
+Text planner chooses an allowed tool name
+    ↓
+Validator checks structured numerical inputs
+    ↓
+Deterministic tool calculates a result
+    ↓
+Formatter explains the result and limits</code></pre>
+  <p>This is a flow diagram, not Python code.</p>
+  <p>The planner is not the calculator. It may choose <code>calculate_pressure</code>, but it must not invent the result. The tool receives numbers, applies one known formula, and returns a structured result.</p>
+
+  <h2>Tool-function syntax</h2>
+  <pre><code id="tool-syntax">def calculate_pressure(force_n: float, area_m2: float) -> dict[str, float]:
+    if force_n < 0:
+        raise ValueError("force must be zero or greater")
+    if area_m2 <= 0:
+        raise ValueError("area must be greater than zero")
+    return {"pressure_pa": force_n / area_m2}</code></pre>
+  <button data-copy-code="#tool-syntax">Copy code</button>
+  <p>The function has a narrow purpose and explicit units. Because it has no hidden state or network access, the same inputs always produce the same result.</p>
+
+  <h2>Text planning is separate</h2>
+  <pre><code id="planner-syntax">def choose_tool(request_text: str) -> str:
+    if "pressure" in request_text.lower():
+        return "calculate_pressure"
+    raise ValueError("No allowed local tool matches the request")</code></pre>
+  <button data-copy-code="#planner-syntax">Copy code</button>
+  <p>This small rule-based planner stands in for the text-planning part of an agent. A real language model may produce text, but application code must still validate the selected tool and every argument before calling it.</p>
+  <h2>Run the local pattern</h2>
+  <pre><code id="agent-example">def calculate_pressure(force_n: float, area_m2: float) -> dict[str, float]:
+    if force_n < 0:
+        raise ValueError("force must be zero or greater")
+    if area_m2 <= 0:
+        raise ValueError("area must be greater than zero")
+    return {"pressure_pa": force_n / area_m2}
+
+def choose_tool(request_text: str) -> str:
+    if "pressure" in request_text.lower():
+        return "calculate_pressure"
+    raise ValueError("No allowed local tool matches the request")
+
+request_text = "Calculate pressure"
+tool_name = choose_tool(request_text)
+
+if tool_name == "calculate_pressure":
+    result = calculate_pressure(12_000, 0.006)
+    print(f"Pressure: {result['pressure_pa']} Pa")</code></pre>
+  <button data-copy-code="#agent-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>Pressure: 2000000.0 Pa</code>. This complete local example is runnable as written.</p>
+
+  <h2>Guardrails for engineering tools</h2>
+  <ul><li>Allow only known tool names; never execute text as Python code.</li><li>Validate types, units, ranges, and required values at the tool boundary.</li><li>Keep calculation inputs and results structured, for example dictionaries.</li><li>Record assumptions such as units and safety factors in the final report.</li><li>Ask a qualified engineer to review safety-critical decisions.</li></ul>
+  <div class="warning"><strong>Warning:</strong> text is not evidence. An agent's explanation can sound confident while being wrong. Do not expose secrets to prompts or tool functions, do not allow arbitrary commands, and do not use a teaching calculation as authorization for a real design decision.</div>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Design a local tool named <code>calculate_cylinder_volume</code>. List its numeric inputs with units, its validation rules, and the result dictionary key. Then write one sentence a text planner could use to select it without performing the calculation itself.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Why should the planner and numerical tool be separate?</li><li>What makes a calculation deterministic?</li><li>Name two checks that belong at a tool boundary.</li><li>Why must a program restrict the tool names an agent can call?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/json.html" target="_blank" rel="noopener">Python 3.14: json</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

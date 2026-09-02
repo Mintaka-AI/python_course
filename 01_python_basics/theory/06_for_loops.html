@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python for Loops</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="05_conditions.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="07_while_loops.html">Next →</a></p>
+  <p><a href="../examples/06_for_loops.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/06_for_loops.py</code>.</p>
+  <h1>Python for Loops</h1>
+  <p>A <code>for</code> loop repeats a block once for every item in a sequence. It is useful when you have a known group of sensor readings, test numbers, or distances.</p>
+
+  <h2>Loop through a list</h2>
+  <pre><code id="for-list">loads_kn = [12.5, 14.0, 11.8]
+
+for load_kn in loads_kn:
+    print(f"Load: {load_kn} kN")</code></pre>
+  <button data-copy-code="#for-list">Copy code</button>
+  <p><strong>Expected output:</strong> three lines: <code>Load: 12.5 kN</code>, <code>Load: 14.0 kN</code>, and <code>Load: 11.8 kN</code>. On each pass, <code>load_kn</code> holds the next list value.</p>
+
+  <h2>Use range()</h2>
+  <p><code>range(stop)</code> makes integers from 0 up to, but not including, <code>stop</code>. Its full form is <code>range(start, stop, step)</code>.</p>
+  <pre><code id="range-loop">for test_number in range(1, 4):
+    print(f"Test {test_number}")
+
+for distance_m in range(0, 101, 25):
+    print(f"Position: {distance_m} m")</code></pre>
+  <button data-copy-code="#range-loop">Copy code</button>
+  <p><strong>Expected output:</strong> the first loop prints Tests 1, 2, and 3. The second prints positions 0, 25, 50, 75, and 100 m. The stop value is not included.</p>
+
+  <h2>break and continue</h2>
+  <p><code>break</code> ends the whole loop immediately. <code>continue</code> skips the remaining code for the current item and moves to the next item.</p>
+  <pre><code id="break-continue">measurements_c = [20.0, -999, 21.5, 150.0, 22.1]
+
+for temperature_c in measurements_c:
+    if temperature_c == -999:
+        print("Missing reading: skipped")
+        continue
+    if temperature_c > 100:
+        print("Unsafe temperature: stopping")
+        break
+    print(f"Accepted: {temperature_c} °C")</code></pre>
+  <button data-copy-code="#break-continue">Copy code</button>
+  <p><strong>Expected output:</strong> 20.0 °C is accepted, the missing reading is skipped, 21.5 °C is accepted, then the unsafe value stops the loop. 22.1 °C is never reached.</p>
+
+  <h2>Loop else</h2>
+  <p>An <code>else</code> attached to a loop runs only when the loop finishes normally. It does <em>not</em> run if <code>break</code> ends the loop.</p>
+  <pre><code id="loop-else">pressures_bar = [4.8, 5.1, 4.9]
+
+for pressure_bar in pressures_bar:
+    if pressure_bar > 6.0:
+        print("Pressure limit exceeded")
+        break
+else:
+    print("All pressure readings are within the limit.")</code></pre>
+  <button data-copy-code="#loop-else">Copy code</button>
+  <p><strong>Expected output:</strong> <code>All pressure readings are within the limit.</code> prints because no reading is above 6.0 and no <code>break</code> occurs.</p>
+
+  <h2>Nested loops</h2>
+  <p>A nested loop is a loop inside another loop. The inner loop completes for every outer-loop item. Use this for a small grid of test cases.</p>
+  <pre><code id="nested-loops">materials = ["Aluminium", "Steel"]
+thicknesses_mm = [2, 4]
+
+for material in materials:
+    for thickness_mm in thicknesses_mm:
+        print(f"Test {material}, {thickness_mm} mm")</code></pre>
+  <button data-copy-code="#nested-loops">Copy code</button>
+  <p><strong>Expected output:</strong> four test labels: two thicknesses for Aluminium, then two for Steel.</p>
+
+  <div class="note">Use meaningful singular names inside a loop: <code>for load_kn in loads_kn</code>. This makes code easier to read.</div>
+  <div class="warning">Do not change a list's size while you are looping through it. Create a new list or loop over a copy when items must be removed.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>For loads <code>[2, 4, -1, 8, 12]</code> in kN, print each valid load in newtons. Skip <code>-1</code>. Stop and print a warning if a load is above 10 kN. Add a loop <code>else</code> message for the case where all loads are safe.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Why does <code>range(5)</code> end at 4?</li><li>What is the difference between <code>break</code> and <code>continue</code>?</li><li>When does a loop <code>else</code> block run?</li><li>How many times does the inner loop run in the nested example?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/controlflow.html#for-statements" target="_blank" rel="noopener">Python 3.14: for statements</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

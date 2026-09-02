@@ -1,0 +1,36 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenAI SDK Agent</title><link rel="stylesheet" href="../../assets/css/course.css"></head><body><main>
+<p><a href="01_agents_and_tools.html">← Previous</a> · <a href="index.html">Module 6 index</a> · <a href="03_langchain_agents.html">Next →</a></p>
+<h1>Build an Agent with the OpenAI SDK</h1><h2>Learning goals</h2><ul><li>Understand function calling in the Responses API.</li><li>Implement a bounded model–tool loop.</li><li>Keep generated arguments away from arbitrary Python execution.</li></ul>
+<h2>1. What makes this an agent?</h2><p>A normal model request produces an answer. A tool-enabled request can instead produce a <code>function_call</code>. Your Python program—not the model—reads that request, validates it, executes an allowlisted function, and returns a <code>function_call_output</code>. The model can then explain the verified output.</p><div class="note">The model proposes a call. Your application remains responsible for authorization, validation, execution, limits, and logging.</div>
+<h2>2. Describe the tool</h2><pre><code id="schema">TOOLS = [{
+    "type": "function",
+    "name": "calculate_stress",
+    "description": "Calculate axial stress from force in N and area in m^2.",
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "force_n": {"type": "number", "minimum": 0},
+            "area_m2": {"type": "number", "exclusiveMinimum": 0}
+        },
+        "required": ["force_n", "area_m2"],
+        "additionalProperties": False
+    },
+    "strict": True
+}]</code></pre><button data-copy-code="#schema">Copy code</button><p>The schema communicates the function purpose and argument contract. Strict mode improves schema adherence, but application-side validation is still required.</p>
+<h2>3. Run the loop</h2><pre><code id="loop">response = client.responses.create(model=MODEL, tools=TOOLS, input=conversation)
+conversation += response.output
+
+for call in response.output:
+    if call.type == "function_call":
+        result_json = execute_tool(call.name, call.arguments)
+        conversation.append({
+            "type": "function_call_output",
+            "call_id": call.call_id,
+            "output": result_json,
+        })</code></pre><button data-copy-code="#loop">Copy code</button><p>Preserve model output as conversation state. Match every result with <code>call_id</code>, then call the API again so the model can read the result.</p>
+<h2>4. Stop safely</h2><p>Use a maximum number of rounds, timeouts, an allowlist, argument checks, output-size limits, and missing-input handling. Never pass model text to <code>eval()</code>, <code>exec()</code>, a shell, or unrestricted file operations.</p>
+<h2>5. Engineering example</h2><p>For 120,000 N and 0.0008 m², the Python function computes <code>stress = force / area</code>, converts Pa to MPa, and returns 150 MPa. The model explains the verified result.</p>
+<div class="exercise"><h2>Try it yourself</h2><p>Run <code>examples/openai_tool_agent.py</code>. Remove the area and confirm that the assistant asks for it. Then add an allowlisted electrical-power tool.</p></div>
+<h2>Check your understanding</h2><ol><li>Who executes the Python function?</li><li>Why return <code>call_id</code>?</li><li>Why validate strict output?</li><li>What prevents an infinite loop?</li></ol>
+<h2>Further reading</h2><ul><li><a href="https://developers.openai.com/api/docs/guides/function-calling" target="_blank" rel="noopener">OpenAI function calling guide</a></li><li><a href="https://developers.openai.com/api/reference/resources/responses/methods/create" target="_blank" rel="noopener">Responses API reference</a></li></ul>
+</main><script src="../../assets/js/course.js" defer></script><footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer></body></html>

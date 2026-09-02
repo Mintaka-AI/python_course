@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Object-Oriented Programming Basics</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="15_args_closures_decorators.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="17_dataclasses_enums.html">Next →</a></p>
+  <p><a href="../examples/16_oop_basics.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/16_oop_basics.py</code>.</p>
+  <h1>Object-Oriented Programming Basics</h1>
+  <p><strong>Prerequisite:</strong> understand dictionaries, functions, parameters, and <code>return</code>. Object-oriented programming (OOP) groups related data and behavior; it does not replace simple functions where a function is clearer.</p>
+  <p>A <strong>class</strong> is a blueprint. An <strong>object</strong>, also called an instance, is one thing made from that blueprint. For example, a <code>Sensor</code> class describes what every sensor has and can do; each physical sensor is an object.</p>
+
+  <h2>Classes, objects, attributes, and methods</h2>
+  <p>Values stored on an object are <strong>attributes</strong>. Functions inside a class are <strong>methods</strong>. The first parameter of an instance method is usually named <code>self</code>; it refers to the particular object using the method.</p>
+  <h3>Syntax</h3>
+  <pre><code id="class-syntax">class ClassName:
+    def __init__(self, value):
+        self.value = value
+
+    def method_name(self):
+        return self.value</code></pre>
+  <button data-copy-code="#class-syntax">Copy code</button>
+
+  <h2>Initialize an object with __init__</h2>
+  <p>Python calls <code>__init__</code> when you create an object. Use it to give every object its starting data.</p>
+  <pre><code id="object-example">class Sensor:
+    def __init__(self, sensor_id, offset_c=0.0):
+        self.sensor_id = sensor_id
+        self.offset_c = offset_c
+
+    def calibrate(self, raw_c):
+        return raw_c + self.offset_c
+
+sensor_a = Sensor("A-01", offset_c=0.2)
+print(sensor_a.sensor_id)
+print(sensor_a.calibrate(20.0))</code></pre>
+  <button data-copy-code="#object-example">Copy code</button>
+  <p><strong>Expected output:</strong></p><pre><code>A-01
+20.2</code></pre>
+
+  <h2>Inheritance and composition</h2>
+  <p><strong>Inheritance</strong> means a more specific class starts from an existing class. <strong>Composition</strong> means an object contains another object. Prefer composition when objects simply work together; it often makes engineering software easier to change.</p>
+  <pre><code id="composition-example">class Location:
+    def __init__(self, room):
+        self.room = room
+
+class LocatedSensor(Sensor):
+    def __init__(self, sensor_id, location):
+        super().__init__(sensor_id)
+        self.location = location
+
+sensor_b = LocatedSensor("B-02", Location("Lab 3"))
+print(sensor_b.sensor_id, "is in", sensor_b.location.room)</code></pre>
+  <button data-copy-code="#composition-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>B-02 is in Lab 3</code>. <code>LocatedSensor</code> inherits from <code>Sensor</code>; it also contains a <code>Location</code> object.</p>
+
+  <h2>Properties for controlled access</h2>
+  <p>A property lets code read an attribute like a value while the class controls how it is calculated or checked. The <code>@property</code> decorator marks a method as a read-only attribute.</p>
+  <pre><code id="property-example">class Tank:
+    def __init__(self, capacity_l, current_l):
+        self.capacity_l = capacity_l
+        self.current_l = current_l
+
+    @property
+    def fill_percent(self):
+        return self.current_l / self.capacity_l * 100
+
+tank = Tank(200, 50)
+print(f"{tank.fill_percent:.0f}%")</code></pre>
+  <button data-copy-code="#property-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>25%</code>.</p>
+
+  <div class="note">Classes are helpful when data and the operations that protect or transform it belong together. A short calculation with a few inputs is often clearer as a normal function.</div>
+  <div class="warning"><strong>Safety note:</strong> an object is not automatically valid just because it exists. Check units and ranges in constructors or methods before using readings in a real decision. Do not rely on inheritance to bypass safety checks from a base class.</div>
+  <div class="exercise"><h2>Try it yourself</h2><ol><li>Create a <code>Beam</code> class with <code>length_m</code> and <code>width_m</code> attributes, plus an <code>area_m2()</code> method.</li><li>Create two separate <code>Sensor</code> objects with different IDs and offsets.</li><li>Add a read-only property to <code>Tank</code> that returns remaining capacity in litres.</li></ol></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What is the difference between a class and an object?</li><li>Why does an instance method receive <code>self</code>?</li><li>What does <code>__init__</code> do?</li><li>When might composition be more suitable than inheritance?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/classes.html" target="_blank" rel="noopener">Python 3.14: classes</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

@@ -1,0 +1,185 @@
+{
+  "course": {
+    "student": "",
+    "current_module": "00_environment",
+    "started_at": "2026-09-02",
+    "last_session": "2026-09-02"
+  },
+  "modules": {
+    "00_environment": {
+      "title": "Environment Setup",
+      "status": "in_progress",
+      "theory": {
+        "mastered": false,
+        "score": null,
+        "attempts": 0,
+        "last_checked": null,
+        "notes": null
+      },
+      "examples": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "code": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      }
+    },
+    "01_python_basics": {
+      "title": "Python Basics",
+      "status": "not_started",
+      "theory": {
+        "mastered": false,
+        "score": null,
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "examples": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "code": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      }
+    },
+    "02_engineering_code": {
+      "title": "Quality Engineering Code",
+      "status": "not_started",
+      "theory": {
+        "mastered": false,
+        "score": null,
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "examples": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "code": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      }
+    },
+    "03_math_and_data": {
+      "title": "Math and Data",
+      "status": "not_started",
+      "theory": {
+        "mastered": false,
+        "score": null,
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "examples": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "code": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      }
+    },
+    "04_engineering_calculations": {
+      "title": "Engineering Calculations",
+      "status": "not_started",
+      "theory": {
+        "mastered": false,
+        "score": null,
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "examples": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "code": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      }
+    },
+    "05_ai_and_llm": {
+      "title": "AI and LLM Fundamentals",
+      "status": "not_started",
+      "theory": {
+        "mastered": false,
+        "score": null,
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "examples": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "code": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      }
+    },
+    "06_engineering_ai_agents": {
+      "title": "Engineering AI Agents",
+      "status": "not_started",
+      "theory": {
+        "mastered": false,
+        "score": null,
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "examples": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      },
+      "code": {
+        "mastered": false,
+        "completed": [],
+        "attempts": 0,
+        "last_checked": null,
+        "notes": ""
+      }
+    }
+  }
+}

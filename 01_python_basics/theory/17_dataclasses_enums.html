@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dataclasses, Enums, and Dunder Methods</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="16_oop_basics.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="18_advanced_typing.html">Next →</a></p>
+  <p><a href="../examples/17_dataclasses_enums.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/17_dataclasses_enums.py</code>.</p>
+  <h1>Dataclasses, Enums, and Dunder Methods</h1>
+  <p class="subtitle">Lesson 17 · Clear data objects and fixed choices for engineering programs</p>
+  <div class="note"><strong>Prerequisite:</strong> know classes, methods, attributes, strings, and lists. A dataclass is still a class; it simply writes some common class code for you.</div>
+
+  <h2>Why use a dataclass?</h2>
+  <p>A beam test has related values: an ID, a load, and a result. Keeping them together in an object is clearer than passing three separate variables. The <code>@dataclass</code> decorator automatically creates a useful <code>__init__</code>, <code>__repr__</code>, and equality comparison.</p>
+  <pre><code id="dataclass-syntax">from dataclasses import dataclass
+
+@dataclass
+class BeamTest:
+    test_id: str
+    load_kn: float
+    passed: bool = False
+
+test = BeamTest("B-17", 24.0, True)
+print(test)</code></pre>
+  <button data-copy-code="#dataclass-syntax">Copy code</button>
+  <p><strong>Expected output:</strong> <code>BeamTest(test_id='B-17', load_kn=24.0, passed=True)</code>. Fields with default values must come after required fields.</p>
+
+  <h2>Enums: a small set of named choices</h2>
+  <p>An <code>Enum</code> prevents unclear status text such as <code>"pass"</code>, <code>"Passed"</code>, or <code>"yes"</code>. Use its member name in code and its value when displaying data.</p>
+  <pre><code id="enum-syntax">from enum import Enum
+
+class TestStatus(Enum):
+    PLANNED = "planned"
+    PASSED = "passed"
+    FAILED = "failed"
+
+status = TestStatus.PASSED
+print(status)
+print(status.value)</code></pre>
+  <button data-copy-code="#enum-syntax">Copy code</button>
+  <p><strong>Expected output:</strong> <code>TestStatus.PASSED</code>, then <code>passed</code>.</p>
+
+  <h2>Dunder methods</h2>
+  <p>“Dunder” means double underscore. Python calls these special methods for common operations. A dataclass supplies several of them, but you can customize them.</p>
+  <ul>
+    <li><code>__init__</code> runs while an object is created.</li>
+    <li><code>__str__</code> returns a friendly string for <code>print(object)</code>.</li>
+    <li><code>__repr__</code> returns a detailed developer representation.</li>
+    <li><code>__eq__</code> decides what <code>object_a == object_b</code> means.</li>
+  </ul>
+  <pre><code id="str-method">def __str__(self) -> str:
+    return f"{self.test_id}: {self.load_kn:.1f} kN"</code></pre>
+  <button data-copy-code="#str-method">Copy code</button>
+  <p>After this method, <code>print(test)</code> can show <code>B-17: 24.0 kN</code>.</p>
+  <div class="warning"><strong>Warning:</strong> an enum is not the same as an arbitrary string. Compare with <code>TestStatus.PASSED</code>, not with <code>"PASSED"</code>. Do not put validation or complicated calculations inside <code>__str__</code>; printing should be safe and quick.</div>
+
+  <h2>Engineering example</h2>
+  <p>The matching example defines a <code>BeamTest</code> dataclass, stores a <code>TestStatus</code>, provides a readable <code>__str__</code>, and calculates a safety factor with a normal method. Run it from UCRT64:</p>
+  <pre><code id="run-example">python examples/17_dataclasses_enums.py</code></pre>
+  <button data-copy-code="#run-example">Copy command</button>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Create a <code>PumpReading</code> dataclass with <code>pump_id</code>, <code>flow_l_min</code>, and a default status enum (<code>NORMAL</code>, <code>WARNING</code>, <code>STOPPED</code>). Add <code>__str__</code> to display one readable line. Create two identical readings and test equality.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Which repeated methods does <code>@dataclass</code> create for a simple data class?</li><li>Why is an enum safer than freely typed status strings?</li><li>What is the difference between <code>__str__</code> and <code>__repr__</code>?</li><li>Why must a default dataclass field follow required fields?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/dataclasses.html" target="_blank" rel="noopener">Python 3.14: dataclasses</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Module 0: Environment Setup</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body>
+  <main>
+    <h1>Module 0: Environment Setup</h1>
+    <div class="note"><strong>Technical reference:</strong> For deeper study, see the official <a href="https://docs.python.org/3.14/using/index.html" target="_blank" rel="noopener">Using Python 3.14</a> and <a href="https://docs.python.org/3.14/library/venv.html" target="_blank" rel="noopener">venv</a> documentation.</div>
+    <p>
+      Before writing Python programs, we need a reliable workspace. In this course,
+      we use <strong>Windows + MSYS2 UCRT64 only</strong>.
+    </p>
+
+    <div class="note">
+      <strong>Course rule:</strong> run every terminal command from the
+      <strong>MSYS2 UCRT64</strong> terminal. Do not use PowerShell, Command Prompt,
+      MSYS, or MINGW64 for this course.
+    </div>
+
+    <h2>Learning goals</h2>
+    <p>By the end of this module, you will be able to:</p>
+    <ul>
+      <li>open the MSYS2 UCRT64 terminal;</li>
+      <li>install Python and useful tools with <code>pacman</code>;</li>
+      <li>check which Python interpreter is running;</li>
+      <li>create and activate a project virtual environment;</li>
+      <li>run a first Python program.</li>
+      <li>choose appropriate optional numerical, statistical, plotting, and build tools for an engineering project.</li>
+    </ul>
+
+    <h2>1. Why use MSYS2 UCRT64?</h2>
+    <p>
+      Windows can have several Python installations. For example, Python may come
+      from the Microsoft Store, a separate installer, or MSYS2. Mixing them causes
+      common beginner problems: a package installs successfully but Python cannot
+      import it.
+    </p>
+    <p>
+      MSYS2 is a development environment for Windows. Its UCRT64 terminal gives us
+      one consistent set of tools: Python, <code>pip</code>, Git, and Unix-like
+      commands such as <code>pwd</code> and <code>ls</code>.
+    </p>
+
+    <div class="warning">
+      <strong>Important:</strong> a package installed in one Python installation is
+      not automatically available in another one. Always check the active Python
+      with <code>which python</code>.
+    </div>
+
+    <h2>Why MSYS2 is useful for engineering work</h2>
+    <p>
+      Engineering projects often combine several tools: Python for automation,
+      compiled libraries for fast calculations, Git for source control, plotting
+      tools for graphs, and numerical or statistical software. MSYS2 provides
+      these tools through one package manager and one UCRT64 environment.
+    </p>
+    <ul>
+      <li><strong>Reproducibility:</strong> write the package names and installation commands in a project README so another engineer can create a similar environment.</li>
+      <li><strong>Compatible toolchain:</strong> UCRT64 packages are built for the same Windows runtime, which reduces conflicts between compilers and libraries.</li>
+      <li><strong>Automation:</strong> shell commands, Python scripts, Git, and build tools can be used together from one terminal.</li>
+      <li><strong>Open-source tools:</strong> numerical, plotting, statistics, and compiler tools can be installed without using many unrelated installers.</li>
+    </ul>
+    <div class="note">
+      MSYS2 does not replace commercial engineering software, engineering
+      standards, or an engineer's judgement. It is a development environment
+      for creating reproducible scripts and tools around calculations.
+    </div>
+
+    <h2>MSYS2 terminals: why UCRT64?</h2>
+    <p>
+      MSYS2 offers several terminals. This course fixes one choice:
+      <strong>UCRT64</strong>. UCRT is the modern Universal C Runtime supplied by
+      Windows. Keeping all tools in UCRT64 helps prevent an executable from one
+      environment loading incompatible libraries from another one.
+    </p>
+    <table>
+      <thead><tr><th>Terminal</th><th>Use in this course</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td>MSYS2 UCRT64</td><td>Use</td><td>Fixed course environment for Python and engineering tools.</td></tr>
+        <tr><td>MSYS</td><td>Do not use</td><td>Mainly intended for MSYS2 maintenance tools.</td></tr>
+        <tr><td>MINGW64 / CLANG64</td><td>Do not use</td><td>Separate environments with their own package sets.</td></tr>
+        <tr><td>PowerShell / Command Prompt</td><td>Do not use for course commands</td><td>May select a different Python or toolchain.</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Finding and installing UCRT64 packages</h2>
+    <p>
+      <code>pacman</code> searches and installs packages. Search before installing
+      optional tools, because package names and availability can change.
+    </p>
+    <pre><code id="find-packages">pacman -Ss octave
+pacman -Ss python-numpy
+pacman -Ss gnuplot
+pacman -Ss r$</code></pre>
+    <button type="button" data-copy-code="#find-packages">Copy commands</button>
+    <p>
+      A UCRT64 package name normally starts with
+      <code>mingw-w64-ucrt-x86_64-</code>. Do not install a package with the
+      <code>mingw-w64-x86_64-</code> prefix: that prefix belongs to MINGW64, not UCRT64.
+    </p>
+
+    <h2>Common packages for the course</h2>
+    <table>
+      <thead><tr><th>Tool</th><th>Purpose</th><th>How it is installed</th></tr></thead>
+      <tbody>
+        <tr><td>Python</td><td>Automation, calculation scripts, AI-agent programs.</td><td><code>pacman</code></td></tr>
+        <tr><td>pip and virtual environments</td><td>Install Python libraries per project.</td><td><code>python -m pip</code> and <code>python -m venv</code></td></tr>
+        <tr><td>Git</td><td>Track changes to source code and reports.</td><td><code>pacman</code></td></tr>
+        <tr><td>pytest</td><td>Test engineering formulas automatically.</td><td><code>python -m pip</code></td></tr>
+        <tr><td>NumPy, SciPy, SymPy</td><td>Numerical arrays, scientific algorithms, and symbolic mathematics.</td><td><code>python -m pip</code> in <code>.venv</code></td></tr>
+        <tr><td>Pandas, openpyxl</td><td>CSV and Excel data processing.</td><td><code>python -m pip</code> in <code>.venv</code></td></tr>
+        <tr><td>Matplotlib</td><td>Plots, charts, and exported figures.</td><td><code>python -m pip</code> in <code>.venv</code></td></tr>
+        <tr><td>Pint</td><td>Unit-aware calculations and dimension checks.</td><td><code>python -m pip</code> in <code>.venv</code></td></tr>
+      </tbody>
+    </table>
+    <pre><code id="install-python-libraries">python -m pip install pytest numpy scipy sympy pandas openpyxl matplotlib pint</code></pre>
+    <button type="button" data-copy-code="#install-python-libraries">Copy command</button>
+    <div class="warning">
+      Install Python libraries only after activating the project <code>.venv</code>.
+      Do not run this command globally unless you understand why you need to.
+    </div>
+
+    <h2>GNU Octave: numerical computing</h2>
+    <p>
+      GNU Octave is a free numerical computing environment with a language similar
+      to MATLAB. It is useful for matrix calculations, linear algebra, numerical
+      methods, signal processing, control-system experiments, and plotting.
+    </p>
+    <pre><code id="install-octave">pacman -S mingw-w64-ucrt-x86_64-octave
+octave --version
+octave</code></pre>
+    <button type="button" data-copy-code="#install-octave">Copy commands</button>
+    <p>
+      In the Octave prompt, try a small matrix calculation:
+    </p>
+    <pre><code id="octave-example">A = [1, 2; 3, 4]
+b = [5; 6]
+x = A \ b</code></pre>
+    <button type="button" data-copy-code="#octave-example">Copy code</button>
+    <p>
+      Octave is optional in this Python course. Use it when an existing team
+      workflow uses MATLAB-like scripts; use Python as the main automation and
+      AI-agent language in this course.
+    </p>
+
+    <h2>R: statistical computing and data analysis</h2>
+    <p>
+      R is a programming language and environment for statistics, data analysis,
+      experimental design, and high-quality statistical graphics. It is especially
+      useful for analysing laboratory results, reliability data, quality-control
+      measurements, and regression models.
+    </p>
+    <pre><code id="install-r">pacman -S mingw-w64-ucrt-x86_64-r
+R --version
+R</code></pre>
+    <button type="button" data-copy-code="#install-r">Copy commands</button>
+    <pre><code id="r-example">measurements <- c(19.8, 20.1, 20.0, 20.3)
+mean(measurements)
+sd(measurements)</code></pre>
+    <button type="button" data-copy-code="#r-example">Copy code</button>
+    <p>
+      R is also optional. For this course, use Pandas and Matplotlib first.
+      Learn R when it is required by your engineering team or data-analysis
+      workflow.
+    </p>
+
+    <h2>Other useful engineering tools</h2>
+    <table>
+      <thead><tr><th>Category</th><th>Examples</th><th>Typical use</th></tr></thead>
+      <tbody>
+        <tr><td>Compilers and build tools</td><td>GCC, G++, GFortran, Make, CMake, Ninja</td><td>Build simulation tools, native Python extensions, or C/C++/Fortran projects.</td></tr>
+        <tr><td>Debuggers and analysis</td><td>GDB, Valgrind-style tools where available</td><td>Investigate crashes and incorrect native-code behavior.</td></tr>
+        <tr><td>Plotting</td><td>GNUplot, Matplotlib, Octave plots, R graphics</td><td>Visualise measurements and calculation results.</td></tr>
+        <tr><td>Numerical libraries</td><td>BLAS, LAPACK, FFTW, OpenBLAS</td><td>Fast linear algebra and signal-processing operations used by scientific software.</td></tr>
+        <tr><td>Data formats</td><td>CSV, JSON, Excel, HDF5</td><td>Exchange sensor, laboratory, simulation, and report data.</td></tr>
+        <tr><td>Domain applications</td><td>CAD, FEA, CFD, GIS, electronics tools</td><td>Model geometry, stress, fluids, maps, or circuits; installation is tool-specific.</td></tr>
+      </tbody>
+    </table>
+    <p>
+      Do not install every package now. Start with the required Python and Git
+      tools. Add optional software only when a lesson or your project needs it.
+    </p>
+
+    <h2>3. Open the correct terminal</h2>
+    <p>
+      From the Windows Start menu, open <strong>MSYS2 UCRT64</strong>. Its prompt
+      normally contains <code>UCRT64</code>.
+    </p>
+    <pre><code id="terminal-check">echo $MSYSTEM
+which python
+python --version</code></pre>
+    <button type="button" data-copy-code="#terminal-check">Copy commands</button>
+    <p>
+      The first command should print <code>UCRT64</code>. The Python path normally
+      contains <code>/ucrt64/bin/python</code>, unless a virtual environment is active.
+    </p>
+
+    <h2>4. Update MSYS2 packages</h2>
+    <p>
+      A package manager installs and updates software. In MSYS2, the package manager
+      is called <code>pacman</code>.
+    </p>
+    <pre><code id="update-msys2">pacman -Syu</code></pre>
+    <button type="button" data-copy-code="#update-msys2">Copy command</button>
+    <p>
+      If the update asks you to close the terminal, close it, open
+      <strong>MSYS2 UCRT64</strong> again, and run <code>pacman -Syu</code> one more time.
+    </p>
+
+    <h2>5. Install Python, pip, virtualenv, and Git</h2>
+    <p>
+      Install the UCRT64 versions of the course tools. The long package names are
+      normal: they make it clear that these packages belong to UCRT64.
+    </p>
+    <pre><code id="install-tools">pacman -S mingw-w64-ucrt-x86_64-python mingw-w64-ucrt-x86_64-python-pip mingw-w64-ucrt-x86_64-python-virtualenv git</code></pre>
+    <button type="button" data-copy-code="#install-tools">Copy command</button>
+
+    <h2>6. Check Python and pip</h2>
+    <p>
+      Run these commands after installation:
+    </p>
+    <pre><code id="check-tools">python --version
+python -m pip --version
+which python</code></pre>
+    <button type="button" data-copy-code="#check-tools">Copy commands</button>
+    <p>
+      We use <code>python -m pip</code>, instead of only <code>pip</code>. It tells
+      Python to run the pip that belongs to that same interpreter.
+    </p>
+
+    <h2>7. Projects and paths</h2>
+    <p>
+      A project is a folder containing related files. In the UCRT64 terminal,
+      Windows drives are written differently:
+    </p>
+    <ul>
+      <li>Windows path: <code>C:\Users\student\projects</code></li>
+      <li>UCRT64 path: <code>/c/Users/student/projects</code></li>
+    </ul>
+    <p>Useful navigation commands:</p>
+    <pre><code id="navigation">pwd
+ls
+cd /c/Users/student/projects
+mkdir first_python_project
+cd first_python_project</code></pre>
+    <button type="button" data-copy-code="#navigation">Copy commands</button>
+
+    <h2>8. Virtual environments</h2>
+    <p>
+      A virtual environment is an isolated Python installation inside one project.
+      It keeps the project’s packages separate from other projects.
+    </p>
+    <pre><code id="venv-commands">python -m venv .venv
+source .venv/Scripts/activate
+which python
+python -m pip install --upgrade pip</code></pre>
+    <button type="button" data-copy-code="#venv-commands">Copy commands</button>
+    <p>
+      After activation, the terminal prompt usually starts with
+      <code>(.venv)</code>. Also, <code>which python</code> should point to
+      <code>.venv/Scripts/python</code>.
+    </p>
+    <p>To leave the environment, run:</p>
+    <pre><code id="deactivate">deactivate</code></pre>
+    <button type="button" data-copy-code="#deactivate">Copy command</button>
+
+    <h2>9. Your first Python program</h2>
+    <p>
+      Create a file named <code>hello.py</code> and add this line:
+    </p>
+    <pre><code id="hello-program">print("Python is ready for engineering!")</code></pre>
+    <button type="button" data-copy-code="#hello-program">Copy code</button>
+    <p>Run it from the folder containing the file:</p>
+    <pre><code id="run-program">python hello.py</code></pre>
+    <button type="button" data-copy-code="#run-program">Copy command</button>
+
+    <div class="exercise">
+      <h2>Self-check</h2>
+      <ol>
+        <li>Which terminal must you use in this course?</li>
+        <li>What command shows the active Python interpreter path?</li>
+        <li>Why do we create a <code>.venv</code> folder for a project?</li>
+        <li>Which command should you use to install a Python package: <code>pip install package</code> or <code>python -m pip install package</code>? Why?</li>
+      </ol>
+    </div>
+
+    <div class="exercise">
+      <h2>Practical task</h2>
+      <ol>
+        <li>Open MSYS2 UCRT64.</li>
+        <li>Create a folder named <code>module_0_practice</code>.</li>
+        <li>Create and activate its <code>.venv</code> environment.</li>
+        <li>Create <code>hello.py</code> that prints your name and the text <code>Ready to learn Python</code>.</li>
+        <li>Run the file with <code>python hello.py</code>.</li>
+      </ol>
+    </div>
+  </main>
+  <script src="../../assets/js/course.js" defer></script>
+
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

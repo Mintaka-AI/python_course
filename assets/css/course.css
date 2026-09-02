@@ -1,0 +1,402 @@
+/* W3.CSS base framework for shared course lesson layout and utilities. */
+@import url("https://www.w3schools.com/w3css/4/w3.css");
+
+/* Course-specific theme and lesson components override the base framework. */
+:root {
+  color-scheme: light;
+  --background: #f7f9fc;
+  --surface: #ffffff;
+  --text: #1e293b;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --border: #dbe3ef;
+  --code-background: #0f172a;
+  --code-text: #e2e8f0;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px;
+  background: var(--background);
+  color: var(--text);
+  font-family: Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  line-height: 1.25;
+}
+
+h1 {
+  margin-top: 0;
+  color: var(--accent);
+}
+
+a {
+  color: var(--accent);
+}
+
+code,
+pre {
+  font-family: "Cascadia Code", Consolas, monospace;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 16px;
+  border-radius: 8px;
+  background: var(--code-background);
+  color: var(--code-text);
+}
+
+code {
+  padding: 2px 4px;
+  border-radius: 4px;
+  background: #e8eef8;
+}
+
+pre code {
+  padding: 0;
+  background: transparent;
+}
+
+.note,
+.warning,
+.exercise {
+  margin: 20px 0;
+  padding: 16px;
+  border-left: 4px solid var(--accent);
+  border-radius: 4px;
+  background: var(--surface);
+}
+
+.warning {
+  border-left-color: #d97706;
+}
+
+.exercise {
+  border-left-color: #059669;
+}
+
+button {
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #ffffff;
+  cursor: pointer;
+  font: inherit;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+.subtitle {
+  color: var(--muted);
+  margin-top: -8px;
+}
+
+.course-summary {
+  margin-top: 24px;
+}
+
+.loading {
+  color: var(--muted);
+}
+
+.summary-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.summary-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.summary-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.summary-meta {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.summary-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 32px;
+  margin-bottom: 16px;
+  color: var(--muted);
+}
+
+.progress-bar {
+  height: 12px;
+  margin-bottom: 32px;
+  border-radius: 999px;
+  background: #e2e8f0;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb, #059669);
+}
+
+.module-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.module-card {
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.module-current {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.module-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.module-header h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.module-id {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-not_started {
+  background: #e2e8f0;
+  color: #475569;
+}
+
+.status-in_progress {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.status-completed,
+.status-pass {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.block-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.block-label {
+  min-width: 72px;
+  font-weight: 600;
+}
+
+.block-details {
+  color: var(--muted);
+}
+
+.menu-dashboard-link {
+  display: inline-block;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.menu-dashboard-link:hover {
+  background: #1d4ed8;
+}
+
+.menu-module {
+  margin: 24px 0;
+  padding: 20px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.menu-module h2,
+.menu-module h3 {
+  margin-top: 0;
+}
+
+.menu-module h3 {
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+.menu-module ul {
+  margin: 0;
+  padding-left: 20px;
+  columns: 2 240px;
+}
+
+.menu-module-pending {
+  color: var(--muted);
+}
+
+/* ===== Site-wide footer ===== */
+.site-footer {
+  margin-top: 40px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+/* ===== Cover / title page (Mintaka-AI course landing) ===== */
+.cover-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.brand-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.brand-name a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-name a:hover {
+  color: var(--accent);
+}
+
+.brand-tagline {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.cover-hero {
+  margin: 28px 0;
+  padding: 36px 24px;
+  text-align: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #eef2ff, #ecfdf5);
+  border: 1px solid var(--border);
+}
+
+.cover-hero h1 {
+  margin-bottom: 8px;
+  font-size: 30px;
+}
+
+.cover-hero .subtitle {
+  margin: 0 auto 20px;
+  max-width: 640px;
+  font-size: 17px;
+}
+
+.cover-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+
+.cover-developer {
+  margin: 24px 0 0;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: 14px;
+  text-align: center;
+}
+
+.cover-developer strong {
+  color: var(--text);
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 20px 14px;
+    font-size: 16px;
+  }
+
+  .cover-hero {
+    padding: 24px 16px;
+  }
+
+  .cover-hero h1 {
+    font-size: 24px;
+  }
+
+  .brand-logo {
+    width: 44px;
+    height: 44px;
+  }
+}

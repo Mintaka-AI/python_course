@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Operators</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="02_variables_and_types.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="04_input.html">Next →</a></p>
+  <p><a href="../examples/03_operators.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/03_operators.py</code>.</p>
+  <h1>Python Operators</h1>
+  <p class="subtitle">Use operators to calculate values, compare limits, and update measurements.</p>
+
+  <h2>Arithmetic operators</h2>
+  <p>Arithmetic operators form numeric expressions: <code>+</code> add, <code>-</code> subtract, <code>*</code> multiply, <code>/</code> divide, <code>//</code> floor division, <code>%</code> remainder, and <code>**</code> power.</p>
+  <pre><code id="arithmetic-example">force_n = 1_200
+area_m2 = 0.02
+stress_pa = force_n / area_m2
+radius_m = 0.5
+circle_area_m2 = 3.14159 * radius_m ** 2
+
+print(stress_pa)
+print(circle_area_m2)</code></pre>
+  <button data-copy-code="#arithmetic-example">Copy code</button>
+  <p>Expected output is <code>60000.0</code> and about <code>0.7853975</code>. The exponent <code>radius_m ** 2</code> calculates radius squared.</p>
+
+  <h2>Comparison and logical operators</h2>
+  <p>Comparisons return a Boolean value: <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, and <code>&gt;=</code>. Combine checks with <code>and</code> (both true), <code>or</code> (at least one true), and <code>not</code> (reverse a Boolean).</p>
+  <pre><code id="logic-example">temperature_c = 22
+pressure_bar = 5
+is_operating_safely = temperature_c &lt;= 80 and pressure_bar &lt;= 10
+
+print(is_operating_safely)</code></pre>
+  <button data-copy-code="#logic-example">Copy code</button>
+  <p>The expected output is <code>True</code> because both limit checks are true.</p>
+
+  <h2>Assignment operators</h2>
+  <p><code>=</code> assigns a value. Operators such as <code>+=</code>, <code>-=</code>, <code>*=</code>, and <code>/=</code> calculate and store a new value in the same variable.</p>
+  <pre><code id="assignment-example">distance_m = 100
+distance_m += 25
+distance_m *= 2
+print(distance_m)</code></pre>
+  <button data-copy-code="#assignment-example">Copy code</button>
+  <p>Expected output: <code>250</code>. This is equivalent to adding 25 to <code>distance_m</code>, then multiplying its new value by 2.</p>
+
+  <h2>Operator precedence</h2>
+  <p>Python usually evaluates parentheses first, then powers, then multiplication and division, then addition and subtraction. Use parentheses when the calculation should be obvious to a reader.</p>
+  <pre><code id="precedence-example">mass_kg = 10
+acceleration_m_s2 = 2
+force_n = mass_kg * (acceleration_m_s2 + 9.80665)
+
+print(force_n)</code></pre>
+  <button data-copy-code="#precedence-example">Copy code</button>
+  <p>Expected output: <code>118.0665</code>. The parentheses make Python add the accelerations before multiplying by mass.</p>
+  <div class="warning"><code>=</code> assigns a value; <code>==</code> compares two values. In formulas, use parentheses instead of guessing the evaluation order.</div>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Store a box length, width, and height in metres. Calculate and print its volume. Then use <code>*=</code> to double the volume and print whether the doubled volume is greater than <code>10</code>.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Which operator calculates a power?</li><li>What does <code>and</code> require to return <code>True</code>?</li><li>What does <code>x += 3</code> do?</li><li>Why are parentheses useful in an engineering formula?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/reference/expressions.html" target="_blank" rel="noopener">Python 3.14: expressions</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

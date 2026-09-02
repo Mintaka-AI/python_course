@@ -1,0 +1,17 @@
+{
+  "calculation": "axial_stress",
+  "inputs": {
+    "force_n": 120000.0,
+    "area_m2": 0.0008
+  },
+  "formula": "stress_pa = force_n / area_m2",
+  "assumptions": [
+    "uniform axial force",
+    "positive area"
+  ],
+  "result": {
+    "stress_mpa": 150.0
+  },
+  "created_at": "2026-09-02T19:07:41.148649+00:00",
+  "warning": "Educational result; requires qualified engineering review."
+}

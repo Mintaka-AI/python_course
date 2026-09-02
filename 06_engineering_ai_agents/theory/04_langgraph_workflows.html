@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LangGraph Workflows</title><link rel="stylesheet" href="../../assets/css/course.css"></head><body><main>
+<p><a href="03_langchain_agents.html">← Previous</a> · <a href="index.html">Module 6 index</a> · <a href="05_mcp_server.html">Next →</a></p>
+<h1>Control Agent Workflows with LangGraph</h1><h2>Learning goals</h2><ul><li>Define state, nodes, edges, and conditional routing.</li><li>Recognize when a graph is more suitable than a simple agent loop.</li><li>Separate probabilistic model decisions from deterministic checks.</li></ul>
+<h2>1. What is LangGraph?</h2><p>LangGraph is a lower-level orchestration framework for long-running, stateful agents and workflows. A graph makes the control flow visible. It is useful when a task must branch, pause for review, recover, persist state, or repeat selected steps.</p>
+<h2>2. Four core ideas</h2><table><thead><tr><th>Term</th><th>Meaning</th><th>Engineering example</th></tr></thead><tbody><tr><td>State</td><td>Data shared across the run</td><td>Force, area, status, result</td></tr><tr><td>Node</td><td>A function that performs one step</td><td>Validate inputs</td></tr><tr><td>Edge</td><td>A permitted transition</td><td>Validate → calculate</td></tr><tr><td>Conditional edge</td><td>A transition selected from state</td><td>Valid → calculate; invalid → stop</td></tr></tbody></table>
+<h2>3. Build a deterministic workflow</h2><pre><code id="graph">builder = StateGraph(EngineeringState)
+builder.add_node("validate", validate_inputs)
+builder.add_node("calculate", calculate)
+builder.add_node("report", create_report)
+
+builder.add_edge(START, "validate")
+builder.add_conditional_edges("validate", route_after_validation)
+builder.add_edge("calculate", "report")
+builder.add_edge("report", END)
+workflow = builder.compile()</code></pre><button data-copy-code="#graph">Copy code</button><p><code>compile()</code> checks and prepares the graph. <code>invoke(initial_state)</code> runs it. Each node returns only state updates, which makes the result of every step inspectable.</p>
+<h2>4. Agent loop with model and tools</h2><p>A common LangGraph agent has an LLM node and a tool node. The LLM node receives messages and may create tool calls. A conditional edge routes to <code>ToolNode</code> when calls exist, otherwise to <code>END</code>. The tool node executes calls and routes back to the model. Keep deterministic validation nodes before actions with side effects.</p>
+<h2>5. LangChain or LangGraph?</h2><p>Start with LangChain <code>create_agent()</code> for a standard model–tool loop. Move to LangGraph when you need customized routing, persistence, retries, human approval, or separate verification stages. LangChain agents already use LangGraph underneath, so the layers complement each other.</p>
+<div class="exercise"><h2>Try it yourself</h2><p>Run <code>examples/langgraph_workflow.py</code>. Try a zero area and a missing area. Add a <code>review</code> node that rejects stress above a chosen educational threshold.</p></div>
+<h2>Check your understanding</h2><ol><li>What information belongs in state?</li><li>What decides a conditional edge?</li><li>Why put validation before calculation?</li><li>When is <code>create_agent()</code> enough?</li></ol>
+<h2>Further reading</h2><ul><li><a href="https://docs.langchain.com/oss/python/langgraph/overview" target="_blank" rel="noopener">LangGraph overview</a></li><li><a href="https://docs.langchain.com/oss/python/langgraph/quickstart" target="_blank" rel="noopener">LangGraph quickstart</a></li><li><a href="https://docs.langchain.com/oss/python/langgraph/use-graph-api" target="_blank" rel="noopener">LangGraph Graph API</a></li></ul>
+</main><script src="../../assets/js/course.js" defer></script><footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer></body></html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Python Collections</title><link rel="stylesheet" href="../../assets/css/course.css"></head>
+<body><main>
+  <p><a href="07_while_loops.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="09_functions.html">Next →</a></p>
+  <p><a href="../examples/08_collections.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/08_collections.py</code>.</p>
+  <h1>Python Data Structures</h1>
+  <p>Data structures store several values in one variable. Python’s main built-in structures are <strong>strings</strong>, <strong>lists</strong>, <strong>tuples</strong>, <strong>sets</strong>, and <strong>dictionaries</strong>.</p>
+
+  <h2>Choose the right structure</h2>
+  <table>
+    <thead><tr><th>Type</th><th>Example</th><th>Ordered</th><th>Changeable</th><th>Duplicates</th><th>Best use</th></tr></thead>
+    <tbody>
+      <tr><td>String</td><td><code>"Steel"</code></td><td>Yes</td><td>No</td><td>Yes</td><td>Text</td></tr>
+      <tr><td>List</td><td><code>[12.5, 14.0]</code></td><td>Yes</td><td>Yes</td><td>Yes</td><td>Measurements that may change</td></tr>
+      <tr><td>Tuple</td><td><code>(2.0, 4.5)</code></td><td>Yes</td><td>No</td><td>Yes</td><td>Fixed values, such as coordinates</td></tr>
+      <tr><td>Set</td><td><code>{101, 102}</code></td><td>No</td><td>Yes</td><td>No</td><td>Unique values</td></tr>
+      <tr><td>Dictionary</td><td><code>{"name": "Steel"}</code></td><td>Yes*</td><td>Yes</td><td>Keys: no</td><td>Named properties</td></tr>
+    </tbody>
+  </table>
+  <p><small>* Dictionaries preserve insertion order in modern Python, but you normally use them to look up values by key.</small></p>
+
+  <h2>1. Strings</h2>
+  <p>A string is text in quotes. It is a sequence of characters, so it supports indexing and slicing. Strings are immutable: methods return new text instead of changing the original.</p>
+  <pre><code id="string-example">material = "Structural Steel"
+
+print(material[0])          # S
+print(material[0:10])       # Structural
+print(material.lower())     # structural steel
+print(material.replace(" ", "_"))</code></pre>
+  <button data-copy-code="#string-example">Copy code</button>
+  <p>Useful string methods: <code>lower()</code>, <code>upper()</code>, <code>strip()</code>, <code>replace(old, new)</code>, <code>split(separator)</code>, <code>join(values)</code>, <code>startswith(text)</code>, and <code>endswith(text)</code>.</p>
+
+  <h2>2. Lists</h2>
+  <p>A list is ordered and changeable. It is the usual choice for a sequence of measurements.</p>
+  <pre><code id="list-example">temperatures_c = [18.2, 19.0, 20.1]
+
+print(temperatures_c[0])    # first value
+print(temperatures_c[-1])   # last value
+print(temperatures_c[1:])   # from index 1 to the end
+
+temperatures_c.append(21.4)
+temperatures_c[0] = 18.5
+print(temperatures_c)</code></pre>
+  <button data-copy-code="#list-example">Copy code</button>
+  <h3>Copy a list safely</h3>
+  <p>Assignment does not make a new list. It gives two variable names to the same list. Use <code>.copy()</code>, slicing, or <code>list()</code> when you need an independent copy.</p>
+  <pre><code id="list-copy">original_loads_kn = [12.5, 14.0, 11.8]
+same_loads = original_loads_kn
+copied_loads = original_loads_kn.copy()
+
+same_loads.append(15.2)
+copied_loads.append(10.0)
+
+print(original_loads_kn)
+print(copied_loads)</code></pre>
+  <button data-copy-code="#list-copy">Copy code</button>
+  <p><strong>Expected output:</strong> the original becomes <code>[12.5, 14.0, 11.8, 15.2]</code> because <code>same_loads</code> refers to it. The copied list ends with <code>10.0</code> instead.</p>
+  <h3>Common list methods</h3>
+  <ul>
+    <li><code>append(value)</code> — add one item at the end.</li>
+    <li><code>extend(values)</code> — add every item from another collection.</li>
+    <li><code>insert(index, value)</code> — add an item at a position.</li>
+    <li><code>remove(value)</code> — remove the first matching value.</li>
+    <li><code>pop(index)</code> — remove and return an item; no index means the last item.</li>
+    <li><code>sort()</code> and <code>reverse()</code> — change the list order.</li>
+    <li><code>count(value)</code> and <code>index(value)</code> — find occurrences or a position.</li>
+    <li><code>clear()</code> — remove every item.</li>
+  </ul>
+  <div class="warning"><code>sort()</code>, <code>reverse()</code>, and <code>clear()</code> change the original list. Use <code>sorted(values)</code> to create a sorted copy instead.</div>
+
+  <h2>3. Tuples</h2>
+  <p>A tuple is ordered but cannot be changed after creation. Use a tuple for data that must stay fixed, such as an <code>(x, y)</code> coordinate.</p>
+  <pre><code id="tuple-example">sensor_location_m = (2.0, 4.5)
+x_m, y_m = sensor_location_m
+
+print(x_m)
+print(sensor_location_m.count(2.0))
+print(sensor_location_m.index(4.5))</code></pre>
+  <button data-copy-code="#tuple-example">Copy code</button>
+  <p>The main tuple methods are <code>count(value)</code> and <code>index(value)</code>. A one-item tuple needs a comma: <code>one_value = (5,)</code>.</p>
+
+  <h2>4. Sets</h2>
+  <p>A set stores unique items. It is useful for removing duplicate sensor IDs or comparing groups of values. A set has no index, so <code>sensor_ids[0]</code> is invalid.</p>
+  <pre><code id="set-example">sensor_ids = {101, 102, 101, 103}
+required_ids = {101, 102, 104}
+
+sensor_ids.add(105)
+sensor_ids.discard(103)
+
+print(sensor_ids)
+print(sensor_ids &amp; required_ids)  # items in both sets
+print(sensor_ids | required_ids)  # all unique items
+print(required_ids - sensor_ids)  # missing IDs</code></pre>
+  <button data-copy-code="#set-example">Copy code</button>
+  <p>Useful set methods: <code>add(value)</code>, <code>update(values)</code>, <code>remove(value)</code>, <code>discard(value)</code>, <code>union(other)</code>, <code>intersection(other)</code>, and <code>difference(other)</code>. <code>remove()</code> raises an error for a missing item; <code>discard()</code> does not.</p>
+
+  <h2>5. Dictionaries</h2>
+  <p>A dictionary connects unique keys to values. It is ideal for material properties, settings, or one measurement record.</p>
+  <pre><code id="dictionary-example">steel = {
+    "name": "Structural steel",
+    "density_kg_m3": 7850,
+    "yield_strength_mpa": 250,
+}
+
+print(steel["density_kg_m3"])
+steel["density_kg_m3"] = 7900
+steel["is_recyclable"] = True
+
+for key, value in steel.items():
+    print(f"{key}: {value}")</code></pre>
+  <button data-copy-code="#dictionary-example">Copy code</button>
+  <h3>Common dictionary methods</h3>
+  <ul>
+    <li><code>get(key, default)</code> — safely get a value; returns the default if the key is absent.</li>
+    <li><code>keys()</code>, <code>values()</code>, <code>items()</code> — views for looping.</li>
+    <li><code>update(other)</code> — add or update several key-value pairs.</li>
+    <li><code>pop(key)</code> — remove and return a value.</li>
+    <li><code>setdefault(key, default)</code> — get a value, adding the default when the key is missing.</li>
+  </ul>
+  <pre><code id="dictionary-get">limit_mpa = steel.get("limit_mpa", 250)
+print(limit_mpa)</code></pre>
+  <button data-copy-code="#dictionary-get">Copy code</button>
+
+  <h2>6. Built-in functions for collections</h2>
+  <p>These functions work with many data structures:</p>
+  <pre><code id="built-in-functions">loads_kn = [12.5, 14.0, 11.8]
+
+print(len(loads_kn))
+print(min(loads_kn))
+print(max(loads_kn))
+print(sum(loads_kn))
+print(sorted(loads_kn))
+
+for index, load_kn in enumerate(loads_kn, start=1):
+    print(index, load_kn)</code></pre>
+  <button data-copy-code="#built-in-functions">Copy code</button>
+  <p>Also useful: <code>list(values)</code>, <code>tuple(values)</code>, <code>set(values)</code>, <code>dict(pairs)</code>, <code>reversed(values)</code>, <code>any(values)</code>, and <code>all(values)</code>.</p>
+  <h3>Match values with zip()</h3>
+  <p><code>zip()</code> pairs items at the same position from two or more collections. This is useful when labels and readings are stored separately.</p>
+  <pre><code id="zip-example">sensor_names = ["A1", "A2", "A3"]
+temperatures_c = [20.1, 21.4, 19.8]
+
+for sensor_name, temperature_c in zip(sensor_names, temperatures_c):
+    print(f"{sensor_name}: {temperature_c} °C")</code></pre>
+  <button data-copy-code="#zip-example">Copy code</button>
+  <p><strong>Expected output:</strong> each sensor is printed with the temperature at the same position. <code>zip()</code> stops when the shortest collection ends.</p>
+  <h3>Check conditions with any() and all()</h3>
+  <pre><code id="any-all-example">pressures_bar = [4.8, 5.1, 6.3]
+over_limit = [pressure_bar > 6.0 for pressure_bar in pressures_bar]
+
+print(any(over_limit))
+print(all(pressure_bar > 0 for pressure_bar in pressures_bar))</code></pre>
+  <button data-copy-code="#any-all-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>True</code> then <code>True</code>. At least one pressure exceeds 6.0, and every pressure is positive. The list expression is introduced fully in Lesson 12.</p>
+
+  <h2>7. Looping through structures</h2>
+  <pre><code id="loops">for temperature_c in [18.2, 19.0, 20.1]:
+    print(temperature_c)
+
+for character in "Pa":
+    print(character)
+
+for property_name, property_value in steel.items():
+    print(property_name, property_value)</code></pre>
+  <button data-copy-code="#loops">Copy code</button>
+
+  <div class="note">Lists, dictionaries, and sets are mutable: their contents can change. Strings and tuples are immutable. Choose the type that matches the data and the changes you expect.</div>
+  <div class="warning">A list copy made with <code>.copy()</code> is a shallow copy. It is enough for a simple list of numbers, but nested lists need more care later.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>Create a dictionary for a material with <code>name</code>, <code>density_kg_m3</code>, and <code>cost_per_kg</code>. Store three test loads in a list. Make a copy before adding a fourth load. Use <code>zip()</code> to print test labels and loads, then use <code>any()</code> to check whether a load is above 20 kN.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Which structure should store unique sensor IDs?</li><li>Why does <code>same_loads = original_loads</code> not create a copy?</li><li>What does <code>zip()</code> do with two lists of different lengths?</li><li>What is the difference between <code>any()</code> and <code>all()</code>?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/datastructures.html" target="_blank" rel="noopener">Python 3.14: data structures</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

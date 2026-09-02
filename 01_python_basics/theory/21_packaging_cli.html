@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Packaging and Command-Line Programs</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="20_logging_configuration.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="22_concurrency_concepts.html">Next →</a></p>
+  <p><a href="../examples/21_packaging_cli.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/21_packaging_cli.py</code>.</p>
+  <h1>Packaging and Command-Line Programs</h1>
+  <p>A package is a folder that groups related Python modules. A command-line interface (CLI) lets a person supply program options in a terminal. Together, they help turn a one-file calculation into a small, reusable engineering tool.</p>
+
+  <div class="note"><strong>Prerequisite:</strong> be comfortable with functions, imports, files, and dictionaries. This is an advanced lesson: learn the structure first, then use it in later projects.</div>
+
+  <h2>A small package layout</h2>
+  <p>Names are examples. The package folder contains code; the outer project folder can also contain tests and documentation.</p>
+  <pre><code id="package-layout">beam_tool/
+├── pyproject.toml
+├── beam_tool/
+│   ├── __init__.py
+│   ├── calculations.py
+│   └── cli.py
+└── tests/
+    └── test_calculations.py</code></pre>
+  <button data-copy-code="#package-layout">Copy code</button>
+  <p><code>__init__.py</code> marks a traditional Python package. Put the formula in <code>calculations.py</code> and terminal input/output in <code>cli.py</code>. This separation makes the formula easier to test.</p>
+
+  <h2>CLI syntax with argparse</h2>
+  <p>The standard-library <code>argparse</code> module reads options such as <code>--force</code>. Define the options, parse them, then call a normal function.</p>
+  <pre><code id="argparse-syntax">import argparse
+
+parser = argparse.ArgumentParser(description="Calculate stress")
+parser.add_argument("--force", type=float, required=True)
+parser.add_argument("--area", type=float, required=True)
+args = parser.parse_args()
+
+stress_pa = args.force / args.area
+print(f"Stress: {stress_pa:.1f} Pa")</code></pre>
+  <button data-copy-code="#argparse-syntax">Copy code</button>
+  <p><strong>Run:</strong> <code>python cli.py --force 12000 --area 0.006</code></p>
+  <p><strong>Expected output:</strong> <code>Stress: 2000000.0 Pa</code></p>
+
+  <h2>Helpful options</h2>
+  <pre><code id="options-example">parser.add_argument("--material", default="steel",
+                    help="Name shown in the report")
+parser.add_argument("--safety-factor", type=float, default=1.5,
+                    help="Factor greater than zero")</code></pre>
+  <button data-copy-code="#options-example">Copy code</button>
+  <p>An option with a default is optional. Use <code>python cli.py --help</code> to see generated help. Use clear names, units, and validation before performing a calculation.</p>
+
+  <h2>Engineering design rule</h2>
+  <p>Keep deterministic calculations independent from the CLI. A function such as <code>calculate_stress(force_n, area_m2)</code> should return a number and should not call <code>input()</code> or print. The CLI validates text from the user, calls the function, and formats the result.</p>
+  <div class="warning"><strong>Warning:</strong> command-line values are untrusted input. Check physical limits such as an area greater than zero. Do not silently accept an unknown unit or replace a bad value with zero.</div>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Create a package layout for a cylinder-volume tool. Plan a calculation function that accepts radius and height in metres, and a CLI command such as <code>python cli.py --radius 0.2 --height 1.0</code>. What checks must happen before the calculation?</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What is the benefit of placing a formula in a separate module?</li><li>What does <code>type=float</code> ask argparse to do?</li><li>Which command displays CLI help?</li><li>Why must an area be validated before dividing by it?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/argparse.html" target="_blank" rel="noopener">Python 3.14: argparse</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

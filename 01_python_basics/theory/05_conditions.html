@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Conditions</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="04_input.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="06_for_loops.html">Next →</a></p>
+  <p><a href="../examples/05_conditions.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/05_conditions.py</code>.</p>
+  <h1>if, elif, and else</h1>
+  <p class="subtitle">Choose an action when a measurement passes, approaches, or exceeds a limit.</p>
+
+  <h2>Make a decision with if</h2>
+  <p>A condition is an expression that becomes <code>True</code> or <code>False</code>. An <code>if</code> statement runs its indented block only when the condition is true. End the condition with a colon.</p>
+  <pre><code id="if-else-example">stress_mpa = 180
+limit_mpa = 250
+
+if stress_mpa &lt;= limit_mpa:
+    print("Within the limit")
+else:
+    print("Exceeds the limit")</code></pre>
+  <button data-copy-code="#if-else-example">Copy code</button>
+  <p>The expected output is <code>Within the limit</code> because 180 is less than or equal to 250. Exactly one of these two branches runs.</p>
+
+  <h2>Add choices with elif</h2>
+  <p>Use <code>elif</code> for an additional condition. Python checks from top to bottom and runs only the first matching branch.</p>
+  <pre><code id="elif-example">temperature_c = 85
+
+if temperature_c &lt; 0:
+    print("Below freezing")
+elif temperature_c &lt;= 80:
+    print("Normal operating range")
+else:
+    print("Temperature too high")</code></pre>
+  <button data-copy-code="#elif-example">Copy code</button>
+  <p>The expected output is <code>Temperature too high</code>. The first two checks are false, so Python runs <code>else</code>.</p>
+  <div class="note">Put the most specific or restrictive checks first when conditions overlap. For example, check an emergency limit before a normal operating limit.</div>
+
+  <h2>Nested conditions</h2>
+  <p>A nested condition is an <code>if</code> inside another branch. Use it when the second decision only matters after the first one has passed. Each new level needs four more spaces.</p>
+  <pre><code id="nested-example">pressure_bar = 8
+temperature_c = 75
+
+if pressure_bar &lt;= 10:
+    if temperature_c &lt;= 80:
+        print("Operating within both limits")
+    else:
+        print("Pressure is safe, but temperature is high")
+else:
+    print("Pressure is too high")</code></pre>
+  <button data-copy-code="#nested-example">Copy code</button>
+  <p>The expected output is <code>Operating within both limits</code>. First the program checks pressure, then it checks temperature because the pressure is acceptable.</p>
+
+  <h2>Combine checks when appropriate</h2>
+  <p>For a simple two-limit decision, one condition with <code>and</code> can be clearer than nesting.</p>
+  <pre><code id="combined-example">pressure_bar = 8
+temperature_c = 75
+
+if pressure_bar &lt;= 10 and temperature_c &lt;= 80:
+    print("Operating within both limits")
+else:
+    print("Check operating conditions")</code></pre>
+  <button data-copy-code="#combined-example">Copy code</button>
+  <p>This produces the same expected output as the nested example for these values.</p>
+  <div class="warning"><strong>Indentation defines a branch.</strong> Use four spaces consistently. Also remember that <code>=</code> assigns; conditions use comparison operators such as <code>==</code> and <code>&lt;=</code>.</div>
+
+  <div class="exercise"><h2>Try it yourself</h2><p>Store a battery voltage. Print <code>Low</code> below 11 V, <code>Normal</code> from 11 V through 13 V, and <code>High</code> above 13 V. Then add a nested condition: when it is high, distinguish between up to 14 V and above 14 V.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What must end an <code>if</code> condition?</li><li>How many spaces indent a branch?</li><li>How many branches can run in one <code>if</code>/<code>elif</code>/<code>else</code> chain?</li><li>When is a nested condition useful?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/controlflow.html#if-statements" target="_blank" rel="noopener">Python 3.14: if statements</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

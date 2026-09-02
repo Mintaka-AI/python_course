@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Exceptions and Context Managers</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="18_advanced_typing.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="20_logging_configuration.html">Next →</a></p>
+  <p><a href="../examples/19_exceptions_context_managers.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/19_exceptions_context_managers.py</code>.</p>
+  <h1>Exceptions and Context Managers</h1>
+  <p class="subtitle">Lesson 19 · Report invalid conditions and always clean up resources</p>
+  <div class="note"><strong>Prerequisite:</strong> know functions, classes, and the basic <code>try</code>/<code>except</code> pattern. Exceptions are signals for unusual conditions; they are not a replacement for normal <code>if</code> decisions.</div>
+
+  <h2>Make domain errors clear</h2>
+  <p>A custom exception gives an engineering problem a specific name. Usually inherit from the closest built-in exception. Invalid numeric input commonly fits <code>ValueError</code>.</p>
+  <pre><code id="custom-exception">class InvalidPressureError(ValueError):
+    """Raised when a pressure is not physically valid."""
+
+def pressure_ratio(actual_kpa: float, limit_kpa: float) -> float:
+    if actual_kpa &lt; 0:
+        raise InvalidPressureError("Pressure cannot be negative.")
+    if limit_kpa &lt;= 0:
+        raise InvalidPressureError("Pressure limit must be greater than zero.")
+    return actual_kpa / limit_kpa</code></pre>
+  <button data-copy-code="#custom-exception">Copy code</button>
+  <p><strong>Expected behavior:</strong> <code>pressure_ratio(180.0, 250.0)</code> returns <code>0.72</code>. A negative pressure raises a readable <code>InvalidPressureError</code>.</p>
+
+  <h2>Catch only what you can handle</h2>
+  <pre><code id="catch-error">try:
+    ratio = pressure_ratio(-5.0, 250.0)
+except InvalidPressureError as error:
+    print(f"Input error: {error}")
+else:
+    print(f"Ratio: {ratio:.2f}")
+finally:
+    print("Check completed.")</code></pre>
+  <button data-copy-code="#catch-error">Copy code</button>
+  <p><code>except</code> handles the chosen error. <code>else</code> runs only on success. <code>finally</code> runs whether success or failure occurs.</p>
+
+  <h2>Context managers and <code>with</code></h2>
+  <p>A context manager prepares a resource and reliably cleans it up. The common file form closes a file even if an error occurs:</p>
+  <pre><code id="with-file">with open("readings.txt", encoding="utf-8") as file:
+    text = file.read()
+# The file is closed here.</code></pre>
+  <button data-copy-code="#with-file">Copy code</button>
+  <p>You can create a small context manager with <code>contextlib.contextmanager</code>. Code before <code>yield</code> is setup; code in <code>finally</code> is cleanup.</p>
+  <pre><code id="contextmanager">from contextlib import contextmanager
+
+@contextmanager
+def test_section(name: str):
+    print(f"Starting {name}")
+    try:
+        yield
+    finally:
+        print(f"Finished {name}")</code></pre>
+  <button data-copy-code="#contextmanager">Copy code</button>
+  <div class="warning"><strong>Warning:</strong> do not write <code>except Exception: pass</code>. It hides bugs, including programming mistakes. Catch the narrow expected exception, explain it, and let unexpected errors be visible while developing.</div>
+
+  <h2>Engineering example</h2>
+  <p>The matching example opens a named test section, calculates a valid pressure ratio, deliberately handles a negative measurement, and always prints its cleanup line.</p>
+  <pre><code id="run-example">python examples/19_exceptions_context_managers.py</code></pre>
+  <button data-copy-code="#run-example">Copy command</button>
+  <p><strong>Expected output:</strong> it begins with <code>Starting pressure check</code>, reports a ratio of <code>0.72</code>, prints the input error, then ends with <code>Finished pressure check</code>.</p>
+  <div class="exercise"><h2>Try it yourself</h2><p>Create <code>InvalidDiameterError</code> and a function that calculates circle area. Raise it for a diameter less than or equal to zero. Then make a context manager that prints “Begin calculation” and “End calculation” around the call.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Why make a custom exception instead of raising a bare <code>ValueError</code>?</li><li>What does <code>finally</code> guarantee?</li><li>What line runs when execution enters a <code>with test_section(...)</code> block?</li><li>Why is a broad, silent exception handler dangerous?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/reference/compound_stmts.html#the-with-statement" target="_blank" rel="noopener">Python 3.14: with statement</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lambda and Higher-Order Functions</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="13_iterators_generators.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="15_args_closures_decorators.html">Next →</a></p>
+  <p><a href="../examples/14_lambda_higher_order.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/14_lambda_higher_order.py</code>.</p>
+  <h1>Lambda and Higher-Order Functions</h1>
+  <p><strong>Prerequisite:</strong> you should be comfortable defining functions, using lists, and writing <code>for</code> loops. A normal named function is still the best first choice for multi-step work.</p>
+  <p>A function can be stored in a variable, passed to another function, or returned from one. A function that receives or returns another function is a <strong>higher-order function</strong>. This is useful when an AI agent needs a small, configurable rule for sorting or transforming data.</p>
+
+  <h2>Lambda expressions</h2>
+  <p>A <strong>lambda</strong> is a small anonymous function written on one expression. It automatically returns that expression's value. It cannot contain assignments, loops, or multiple statements.</p>
+  <h3>Syntax</h3>
+  <pre><code id="lambda-syntax">lambda parameter: expression
+lambda first, second: expression</code></pre>
+  <button data-copy-code="#lambda-syntax">Copy code</button>
+  <pre><code id="lambda-example">area_of_square = lambda side_m: side_m ** 2
+
+print(area_of_square(3.0))</code></pre>
+  <button data-copy-code="#lambda-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>9.0</code>. The lambda receives <code>3.0</code> and evaluates <code>3.0 ** 2</code>.</p>
+
+  <h2>map() and filter()</h2>
+  <p><code>map(function, iterable)</code> applies a function to each item. <code>filter(function, iterable)</code> keeps values for which the function returns <code>True</code>. Both return lazy iterators, so use <code>list()</code> when you want to display their results.</p>
+  <pre><code id="map-filter">temperatures_c = [-3, 5, 18]
+temperatures_f = list(map(lambda temp_c: temp_c * 9 / 5 + 32, temperatures_c))
+above_freezing_c = list(filter(lambda temp_c: temp_c >= 0, temperatures_c))
+
+print(temperatures_f)
+print(above_freezing_c)</code></pre>
+  <button data-copy-code="#map-filter">Copy code</button>
+  <p><strong>Expected output:</strong></p><pre><code>[26.6, 41.0, 64.4]
+[5, 18]</code></pre>
+  <p>For many beginners, a comprehension is clearer than <code>map()</code> or <code>filter()</code>. Compare: <code>[temp_c for temp_c in temperatures_c if temp_c >= 0]</code>.</p>
+
+  <h2>Sorting with a key function</h2>
+  <p><code>sorted()</code> can use <code>key=</code> to decide what to compare. The key function receives one item and returns its sorting value.</p>
+  <pre><code id="sorted-key">tests = [
+    {"id": "T-1", "error_mm": 0.8},
+    {"id": "T-2", "error_mm": 0.2},
+    {"id": "T-3", "error_mm": 0.5},
+]
+
+sorted_tests = sorted(tests, key=lambda test: test["error_mm"])
+print([test["id"] for test in sorted_tests])</code></pre>
+  <button data-copy-code="#sorted-key">Copy code</button>
+  <p><strong>Expected output:</strong> <code>['T-2', 'T-3', 'T-1']</code>.</p>
+
+  <div class="note">Use lambda for a short, obvious rule used once, such as a <code>sorted(key=...)</code> expression. Give repeated or complex work a descriptive <code>def</code> name.</div>
+  <div class="warning"><strong>Safety note:</strong> a compact lambda can hide an important engineering rule. Do not put safety limits, unit conversions, or complicated validation into an unreadable one-line expression; use a named function and test it.</div>
+  <div class="exercise"><h2>Try it yourself</h2><ol><li>Use <code>map()</code> and a lambda to convert <code>[1, 2, 3]</code> metres to millimetres.</li><li>Use <code>filter()</code> to keep pressures below 500 kPa.</li><li>Sort a list of dictionaries containing <code>"name"</code> and <code>"mass_kg"</code> by mass.</li></ol></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What value does a lambda expression return?</li><li>Why is a lambda unsuitable for a multi-step calculation?</li><li>What do <code>map()</code> and <code>filter()</code> return?</li><li>What does the key function in <code>sorted(..., key=...)</code> provide?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/controlflow.html#lambda-expressions" target="_blank" rel="noopener">Python 3.14: lambda expressions</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

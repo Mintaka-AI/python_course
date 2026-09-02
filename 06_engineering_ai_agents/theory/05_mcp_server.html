@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>MCP Server</title><link rel="stylesheet" href="../../assets/css/course.css"></head><body><main>
+<p><a href="04_langgraph_workflows.html">← Previous</a> · <a href="index.html">Module 6 index</a> · <a href="06_final_project.html">Next →</a></p>
+<h1>Build and Connect an MCP Server</h1><h2>Learning goals</h2><ul><li>Distinguish an MCP host, client, and server.</li><li>Expose a tool, resource, and prompt with the Python SDK.</li><li>Choose stdio or Streamable HTTP safely.</li></ul>
+<h2>1. What is MCP?</h2><p>Model Context Protocol is a standard way for an AI application to discover and use external capabilities. The <strong>host</strong> is the application used by the learner. An MCP <strong>client</strong> lives inside the host and connects to one server. The <strong>server</strong> exposes capabilities; it does not normally talk directly to the model.</p>
+<h2>2. Three server primitives</h2><table><thead><tr><th>Primitive</th><th>Usually selected by</th><th>Purpose</th></tr></thead><tbody><tr><td>Tool</td><td>Model</td><td>Execute an operation</td></tr><tr><td>Resource</td><td>Application</td><td>Load data into context</td></tr><tr><td>Prompt</td><td>User</td><td>Use a reusable message template</td></tr></tbody></table><p>A calculation belongs in a tool. A read-only limitations document fits a resource. A reusable “explain this result” instruction fits a prompt.</p>
+<h2>3. Create a Python server</h2><pre><code id="mcp">from mcp.server import MCPServer
+from engineering_tools import calculate_stress
+
+mcp = MCPServer("engineering-tools")
+
+@mcp.tool()
+def axial_stress(force_n: float, area_m2: float) -&gt; dict:
+    """Calculate axial stress from N and m^2."""
+    return calculate_stress(force_n, area_m2)
+
+if __name__ == "__main__":
+    mcp.run()</code></pre><button data-copy-code="#mcp">Copy code</button><p>The SDK derives the tool name, description, and input schema from the function, docstring, and type hints. Import <code>MCPServer</code> from <code>mcp.server</code>. The main guard prevents a server from starting when tests or tools import the file.</p>
+<h2>4. Run and inspect it</h2><pre><code>mcp dev examples/mcp_engineering_server.py</code></pre><p>Run this command in the activated MSYS2 UCRT64 virtual environment. The MCP Inspector displays registered primitives and generates a form from type hints. For the local <code>stdio</code> transport, a host starts the server as a subprocess and communicates through standard input/output; avoid ordinary output that can corrupt that protocol stream, and use logging.</p>
+<h2>5. Transports</h2><ul><li><code>stdio</code> is the default for local servers.</li><li><code>streamable-http</code> is intended for deployed servers.</li><li>SSE is a superseded legacy transport and should not be chosen for a new server.</li></ul>
+<h2>6. Use a remote MCP server from OpenAI</h2><pre><code id="remote">response = client.responses.create(
+    model="gpt-5.6",
+    tools=[{
+        "type": "mcp",
+        "server_label": "engineering",
+        "server_url": "https://example.com/mcp",
+        "allowed_tools": ["axial_stress"],
+        "require_approval": "always",
+    }],
+    input="Calculate the stress from the supplied values.",
+)</code></pre><button data-copy-code="#remote">Copy code</button><p>The Responses API can call a remote MCP server through its URL. Prefer a narrow <code>allowed_tools</code> list and require approval for sensitive actions. A local stdio server is not automatically a public remote URL.</p>
+<div class="warning">Treat third-party MCP servers as external services. Review their data handling, tool behavior, authentication, and approval policy before sending data.</div>
+<div class="exercise"><h2>Try it yourself</h2><p>Inspect <code>examples/mcp_engineering_server.py</code>. Call its tool with valid and invalid values. Add a read-only material-properties resource, then explain why changing a file should be a tool rather than a resource.</p></div>
+<h2>Check your understanding</h2><ol><li>Does an MCP server call the model directly?</li><li>Who usually chooses tools, resources, and prompts?</li><li>Why is the main guard important?</li><li>Which transport is used for a deployed new server?</li></ol>
+<h2>Further reading</h2><ul><li><a href="https://modelcontextprotocol.io/docs/develop/build-server" target="_blank" rel="noopener">Build an MCP server</a></li><li><a href="https://github.com/modelcontextprotocol/python-sdk/blob/main/docs/get-started/first-steps.md" target="_blank" rel="noopener">Official MCP Python SDK first steps</a></li><li><a href="https://developers.openai.com/api/docs/guides/tools-connectors-mcp" target="_blank" rel="noopener">OpenAI MCP and connectors guide</a></li></ul>
+</main><script src="../../assets/js/course.js" defer></script><footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer></body></html>

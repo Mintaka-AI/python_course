@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Modules and Imports</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body>
+<main>
+  <p><a href="05_validation.html">← Previous</a> · <a href="index.html">Module 2 index</a> · <a href="07_type_hints.html">Next →</a></p>
+
+  <h1>Python Modules, Imports, and the Main Guard</h1>
+  <p>As a program grows, one Python file becomes difficult to read and test. It may contain formulas, file handling, user messages, and program startup code all in one place. <strong>Modules</strong> let us divide that work into small files with clear jobs.</p>
+
+  <div class="note">
+    <strong>In this lesson:</strong> a module is simply a Python file. For example,
+    <code>calculations.py</code> is a module. It can contain functions that another
+    Python file imports and uses.
+  </div>
+
+  <h2>1. Why use modules?</h2>
+  <p>Imagine an engineering program that reads a CSV file, checks measurements, calculates stress, prints a report, and runs tests. Keeping every line in <code>main.py</code> makes it hard to answer basic review questions: “Where is the formula?” and “Can I test the formula without opening a file?”</p>
+  <p>Instead, separate the responsibilities:</p>
+  <pre><code>engineering_project/
+├── calculations.py       # Calculation functions and validation rules
+├── main.py               # Starts the application and displays results
+├── data/
+│   └── measurements.csv  # Input measurements
+└── test_calculations.py  # Automated checks for calculation functions</code></pre>
+  <p>This structure is not mandatory for every two-line script. It becomes useful as soon as a formula needs reuse, testing, or independent review.</p>
+
+  <h2>2. Create a module</h2>
+  <p>Create a file named <code>calculations.py</code> in the project folder. Put a calculation function in it:</p>
+  <pre><code id="calculation-module"># calculations.py
+
+def rectangle_area_m2(length_m: float, width_m: float) -&gt; float:
+    """Return the area of a rectangle in square metres."""
+    if length_m &lt; 0 or width_m &lt; 0:
+        raise ValueError("Length and width must not be negative.")
+    return length_m * width_m</code></pre>
+  <button type="button" data-copy-code="#calculation-module">Copy code</button>
+  <p>The filename without <code>.py</code> is the module name: <code>calculations</code>. The function is available to another file only after that file imports it.</p>
+
+  <h2>3. Import one function</h2>
+  <p>Create <code>main.py</code> in the same folder as <code>calculations.py</code>:</p>
+  <pre><code id="import-function"># main.py
+
+from calculations import rectangle_area_m2
+
+length_m = 2.5
+width_m = 1.2
+area_m2 = rectangle_area_m2(length_m, width_m)
+
+print(f"Area: {area_m2:.2f} m²")</code></pre>
+  <button type="button" data-copy-code="#import-function">Copy code</button>
+  <p>Run <code>python main.py</code>. Python first finds <code>calculations.py</code>, then makes the requested function name available in <code>main.py</code>. The expected output is <code>Area: 3.00 m²</code>.</p>
+
+  <h3>Read the import line</h3>
+  <pre><code>from calculations import rectangle_area_m2</code></pre>
+  <ul>
+    <li><code>calculations</code> is the filename <code>calculations.py</code>, without its extension.</li>
+    <li><code>rectangle_area_m2</code> is the name defined inside that file.</li>
+    <li>Do not write <code>from calculations.py import ...</code>; the <code>.py</code> extension is not used in an import statement.</li>
+  </ul>
+
+  <h2>4. Import the whole module</h2>
+  <p>You can also import the module itself:</p>
+  <pre><code id="import-module">import calculations
+
+area_m2 = calculations.rectangle_area_m2(2.5, 1.2)
+print(f"Area: {area_m2:.2f} m²")</code></pre>
+  <button type="button" data-copy-code="#import-module">Copy code</button>
+  <p>The dot means “use a name from this module.” This form makes the origin of the function very clear. Both forms are valid:</p>
+  <table><thead><tr><th>Import</th><th>Call</th><th>Use it when</th></tr></thead><tbody>
+  <tr><td><code>from calculations import rectangle_area_m2</code></td><td><code>rectangle_area_m2(...)</code></td><td>You use a small number of focused names.</td></tr>
+  <tr><td><code>import calculations</code></td><td><code>calculations.rectangle_area_m2(...)</code></td><td>You want the source of every function call to be obvious.</td></tr>
+  </tbody></table>
+  <div class="warning">Avoid <code>from calculations import *</code>. It imports many names without showing their origin, which makes engineering code harder to review.</div>
+
+  <h2>5. What happens when Python imports a module?</h2>
+  <p>Python runs the top-level statements in a module once when it imports it. Function definitions are safe at the top level: Python records the function, but does not run its body until the function is called.</p>
+  <pre><code id="import-effect"># calculations.py
+print("calculations module is being loaded")
+
+def add_force_n(first_force_n: float, second_force_n: float) -&gt; float:
+    return first_force_n + second_force_n</code></pre>
+  <button type="button" data-copy-code="#import-effect">Copy code</button>
+  <p>When another file writes <code>import calculations</code>, the message prints immediately. The function body does not run until code calls <code>calculations.add_force_n(...)</code>. This is why modules should normally define reusable items at the top level but should not automatically start a full program there.</p>
+
+  <h2>6. The main guard: <code>if __name__ == "__main__"</code></h2>
+  <p>Every Python file has a special variable called <code>__name__</code>. Its value changes depending on how the file is used:</p>
+  <table><thead><tr><th>How the file is used</th><th>Value of <code>__name__</code></th></tr></thead><tbody>
+  <tr><td>You run <code>python main.py</code></td><td><code>"__main__"</code></td></tr>
+  <tr><td>Another file imports <code>main</code></td><td><code>"main"</code></td></tr>
+  </tbody></table>
+  <p>A <strong>main guard</strong> is an <code>if</code> statement that runs startup code only when the file is executed directly:</p>
+  <pre><code id="main-guard">def main() -&gt; None:
+    """Run the engineering calculator."""
+    area_m2 = rectangle_area_m2(2.5, 1.2)
+    print(f"Area: {area_m2:.2f} m²")
+
+
+if __name__ == "__main__":
+    main()</code></pre>
+  <button type="button" data-copy-code="#main-guard">Copy code</button>
+  <p>When you run this file directly, <code>__name__ == "__main__"</code> is true, so Python calls <code>main()</code>. When a test imports the file, the condition is false, so the program does not unexpectedly print output, read files, or ask for input.</p>
+
+  <h3>Why use a function named <code>main()</code>?</h3>
+  <p><code>main</code> is only a normal function name, not a Python keyword. The convention helps readers find the program’s starting sequence. It also allows a test to call <code>main()</code> deliberately if needed.</p>
+
+  <h2>7. A complete two-file example</h2>
+  <p>Place these files in one folder and run <code>python main.py</code>.</p>
+  <pre><code id="complete-example"># calculations.py
+def calculate_stress_pa(force_n: float, area_m2: float) -&gt; float:
+    if force_n &lt; 0:
+        raise ValueError("Force must not be negative.")
+    if area_m2 &lt;= 0:
+        raise ValueError("Area must be greater than zero.")
+    return force_n / area_m2
+
+# main.py
+from calculations import calculate_stress_pa
+
+def main() -&gt; None:
+    stress_pa = calculate_stress_pa(120_000, 0.0008)
+    print(f"Stress: {stress_pa / 1_000_000:.2f} MPa")
+
+if __name__ == "__main__":
+    main()</code></pre>
+  <button type="button" data-copy-code="#complete-example">Copy code</button>
+  <p>The formula module can now be used by <code>main.py</code>, an automated test, or a future AI-agent tool without copying the formula.</p>
+
+  <h2>8. Common beginner mistakes</h2>
+  <table><thead><tr><th>Problem</th><th>Cause</th><th>Fix</th></tr></thead><tbody>
+  <tr><td><code>ModuleNotFoundError</code></td><td>The module is not in the expected folder, or the program was run from the wrong place.</td><td>Keep the two files together for this lesson and run <code>python main.py</code> from that folder.</td></tr>
+  <tr><td><code>from calculations.py import ...</code></td><td>The filename extension was included.</td><td>Use <code>from calculations import ...</code>.</td></tr>
+  <tr><td>Program prints or asks for input during a test.</td><td>Startup code is at the top level.</td><td>Move it into <code>main()</code> and use the main guard.</td></tr>
+  <tr><td>Two files import each other.</td><td>Each module depends on the other.</td><td>Move shared functions into a third module; avoid circular imports.</td></tr>
+  </tbody></table>
+
+  <div class="exercise"><h2>Try it yourself</h2><ol><li>Create <code>unit_conversions.py</code> with a typed function <code>kilonewtons_to_newtons(load_kn)</code>.</li><li>Create <code>main.py</code> that imports the function and prints the conversion of <code>12.5 kN</code>.</li><li>Put the printing code in <code>main()</code> and add the main guard.</li><li>Run <code>python main.py</code> from the folder containing both files.</li></ol></div>
+
+  <h2>Check your understanding</h2><ol><li>What is a module in Python?</li><li>Why does an import omit <code>.py</code>?</li><li>What does the main guard prevent when a file is imported?</li><li>Why is a calculation function easier to test when it does not call <code>input()</code> or <code>print()</code>?</li></ol>
+</main>
+<script src="../../assets/js/course.js" defer></script>
+<footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

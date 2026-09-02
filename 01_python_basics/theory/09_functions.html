@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Python Functions</title><link rel="stylesheet" href="../../assets/css/course.css"></head>
+<body><main>
+  <p><a href="08_collections.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="10_strings_and_fstrings.html">Next →</a></p>
+  <p><a href="../examples/09_functions.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/09_functions.py</code>.</p>
+  <h1>Functions, Parameters, and Return Values</h1>
+  <p>A function is a named, reusable block of code. Define it with <code>def</code>, then call it using its name.</p>
+  <pre><code id="function-example">def rectangle_area(length_m, width_m):
+    return length_m * width_m
+
+
+area_m2 = rectangle_area(2.5, 1.2)
+print(f"Area: {area_m2} m²")</code></pre>
+  <button data-copy-code="#function-example">Copy code</button>
+  <p><code>length_m</code> and <code>width_m</code> are parameters. <code>return</code> sends the calculation result back to the caller.</p>
+  <p><strong>Expected output:</strong> <code>Area: 3.0 m²</code>. The function calculates first; <code>print()</code> displays the returned value.</p>
+  <h2>Docstrings</h2>
+  <p>A docstring is the first string inside a function. It explains what the function does, its inputs, and its result. Python tools can show it with <code>help()</code>.</p>
+  <pre><code id="docstring-example">def cylinder_volume_m3(radius_m, height_m):
+    """Return the volume of a cylinder in cubic metres."""
+    return 3.14159 * radius_m ** 2 * height_m
+
+print(cylinder_volume_m3(0.5, 2.0))</code></pre>
+  <button data-copy-code="#docstring-example">Copy code</button>
+  <p><strong>Expected output:</strong> approximately <code>1.570795</code>. The triple-quoted text is documentation, not output.</p>
+  <h2>Positional and keyword arguments</h2>
+  <p>Positional arguments match parameters by order. Keyword arguments name the parameter, so their order is clear to the reader.</p>
+  <pre><code id="argument-example">def pressure_pa(force_n, area_m2):
+    """Return pressure in pascals."""
+    return force_n / area_m2
+
+print(pressure_pa(1000, 2))                 # positional
+print(pressure_pa(area_m2=2, force_n=1000)) # keyword</code></pre>
+  <button data-copy-code="#argument-example">Copy code</button>
+  <p><strong>Expected output:</strong> both calls print <code>500.0</code>. Keyword arguments prevent confusion about which value is force and which is area.</p>
+  <h2>Default parameter</h2>
+  <p>A default parameter is used when the caller does not provide that value.</p>
+  <pre><code id="default-parameter">def convert_length(value_m, factor=1000):
+    return value_m * factor
+
+
+print(convert_length(2.5))
+print(convert_length(2.5, 100))</code></pre>
+  <button data-copy-code="#default-parameter">Copy code</button>
+  <p><strong>Expected output:</strong> <code>2500.0</code> then <code>250.0</code>. The first call uses the default factor of 1000; the second supplies 100.</p>
+  <h2>Local and global scope</h2>
+  <p>A variable created inside a function is local: it exists only inside that function. A global variable is defined outside. Reading a global is possible, but passing values and returning results is usually safer.</p>
+  <pre><code id="scope-example">unit = "kN"  # global variable
+
+def show_load(load_kn):
+    label = f"{load_kn} {unit}"  # local variable
+    print(label)
+
+show_load(12.5)
+print(unit)</code></pre>
+  <button data-copy-code="#scope-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>12.5 kN</code> then <code>kN</code>. <code>label</code> cannot be used outside <code>show_load</code>.</p>
+  <div class="note">Use functions to keep one calculation in one place. This makes later testing and correction much safer.</div>
+  <div class="warning">Do not use a mutable value such as <code>[]</code> as a default parameter. Create the list inside the function when needed; this avoids sharing one list between calls.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>Write <code>cylinder_volume_m3(radius_m, height_m)</code> with a one-line docstring and a return value using <code>3.14159 * radius_m ** 2 * height_m</code>. Call it once with positional arguments and once with keyword arguments. Print both results.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What does <code>return</code> do?</li><li>What is a docstring for?</li><li>How are keyword arguments different from positional arguments?</li><li>Where can a local variable be used?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/controlflow.html#defining-functions" target="_blank" rel="noopener">Python 3.14: defining functions</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

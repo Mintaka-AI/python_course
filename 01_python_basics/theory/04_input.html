@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Input</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="03_operators.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="05_conditions.html">Next →</a></p>
+  <p><a href="../examples/04_input.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/04_input.py</code>.</p>
+  <h1>User Input and Type Conversion</h1>
+  <p class="subtitle">Ask a user for a value, convert it safely, and use it in a calculation.</p>
+
+  <h2>Use input()</h2>
+  <p><code>input(prompt)</code> prints a prompt, pauses the program, and returns what the user typed. The returned value is always text, also called a <code>str</code>.</p>
+  <pre><code id="input-text">material = input("Material name: ")
+print(f"Selected material: {material}")</code></pre>
+  <button data-copy-code="#input-text">Copy code</button>
+  <p>If the user types <code>Steel</code>, the expected output is <code>Selected material: Steel</code>.</p>
+
+  <h2>Convert numeric input</h2>
+  <p>A calculation needs numbers, not text. Use <code>int()</code> for a whole number and <code>float()</code> for a decimal measurement.</p>
+  <pre><code id="input-number">force_text = input("Force in N: ")
+force_n = float(force_text)
+area_m2 = 0.02
+stress_pa = force_n / area_m2
+
+print(f"Stress: {stress_pa:.2f} Pa")</code></pre>
+  <button data-copy-code="#input-number">Copy code</button>
+  <p>With input <code>1200</code>, the expected final output is <code>Stress: 60000.00 Pa</code>. Separating the text and number variables makes the conversion clear.</p>
+
+  <h2>Safe input habits</h2>
+  <p>Write prompts that include the expected unit. Before using a measurement, consider whether it is empty, numeric, and physically meaningful. For example, an area used as a divisor must be greater than zero.</p>
+  <pre><code id="safe-input-example">area_text = input("Area in m² (greater than 0): ").strip()
+
+if area_text:
+    area_m2 = float(area_text)
+    print(f"Received: {area_m2} m²")
+else:
+    print("No area was entered.")</code></pre>
+  <button data-copy-code="#safe-input-example">Copy code</button>
+  <p><code>strip()</code> removes spaces at the start and end. The condition prevents conversion when the user only presses Enter. Conditions are explained in the next lesson.</p>
+  <div class="warning">Entering <code>ten</code> into <code>float()</code> raises <code>ValueError</code>; entering <code>0</code> for an area can later cause division by zero. Do not use unverified input for a real engineering decision. Full error handling comes later.</div>
+
+  <h2>Runnable engineering example</h2>
+  <pre><code id="engineering-input-example">length_m = float(input("Length in m: "))
+length_mm = length_m * 1_000
+
+print(f"Length: {length_mm:.1f} mm")</code></pre>
+  <button data-copy-code="#engineering-input-example">Copy code</button>
+  <p>When the user enters <code>2.5</code>, the program prints <code>Length: 2500.0 mm</code>. The f-string formats the result to one decimal place.</p>
+
+  <div class="note">Keep raw input and converted values separate while learning: names such as <code>length_text</code> and <code>length_m</code> show what each value contains.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>Ask for a mass in kilograms, convert it to <code>float</code>, calculate the weight using <code>9.80665</code>, and print the result in newtons with two decimal places. Include the unit in the prompt.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What type does <code>input()</code> return?</li><li>When would you use <code>float()</code> instead of <code>int()</code>?</li><li>What does <code>strip()</code> help remove?</li><li>Why should an area be checked before division?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/functions.html#input" target="_blank" rel="noopener">Python 3.14: input()</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

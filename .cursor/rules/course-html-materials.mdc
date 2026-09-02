@@ -1,0 +1,47 @@
+---
+description: Rules for creating course HTML lessons
+globs: "**/theory/**/*.html"
+alwaysApply: false
+---
+
+# Course HTML Lessons
+
+Theory materials are HTML files in the `theory/` folder of each module.
+
+## Resource Links
+
+```html
+<link rel="stylesheet" href="../../assets/css/course.css">
+<script src="../../assets/js/course.js" defer></script>
+```
+
+Adjust the number of `../` segments based on file nesting depth.
+
+## HTML Lesson Structure
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Lesson Title</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body>
+  <h1>Lesson Title</h1>
+  <p>Theory content...</p>
+  <div class="note">Important note</div>
+  <div class="exercise">Self-check exercise</div>
+  <pre><code>code example</code></pre>
+  <script src="../../assets/js/course.js" defer></script>
+</body>
+</html>
+```
+
+## Content Rules
+
+- Language: English.
+- Short paragraphs, simple words.
+- One topic per lesson.
+- Code examples from engineering and mathematics.
+- Use `.note`, `.warning`, and `.exercise` blocks from `course.css`.

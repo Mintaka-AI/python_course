@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Logging and Configuration</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="19_exceptions_context_managers.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="21_packaging_cli.html">Next →</a></p>
+  <p><a href="../examples/20_logging_configuration.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/20_logging_configuration.py</code>.</p>
+  <h1>Logging and Configuration</h1>
+  <p class="subtitle">Lesson 20 · Useful program records without leaking secrets</p>
+  <div class="note"><strong>Prerequisite:</strong> know functions, imports, exceptions, and strings. Use <code>print()</code> for short learning output; use the standard <code>logging</code> module when a program needs consistent diagnostic records.</div>
+
+  <h2>Logging levels</h2>
+  <p>A level describes the importance of a message. This lets operators filter routine messages from failures.</p>
+  <ul>
+    <li><code>DEBUG</code>: detailed developer investigation.</li>
+    <li><code>INFO</code>: normal progress, such as starting a calculation.</li>
+    <li><code>WARNING</code>: work continues, but attention may be needed.</li>
+    <li><code>ERROR</code>: one operation failed or produced an unsafe result.</li>
+    <li><code>CRITICAL</code>: the program may be unable to continue safely.</li>
+  </ul>
+  <pre><code id="logging-basics">import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger("beam_monitor")
+
+logger.info("Starting load check")
+logger.warning("Sensor calibration is overdue")</code></pre>
+  <button data-copy-code="#logging-basics">Copy code</button>
+  <p><strong>Expected output:</strong> lines similar to <code>INFO beam_monitor: Starting load check</code> and <code>WARNING beam_monitor: Sensor calibration is overdue</code>.</p>
+
+  <h2>Use environment variables for configuration</h2>
+  <p>An environment variable is a value supplied outside source code. It is suitable for deployment-specific settings, such as a project name, endpoint, or secret token. Read it with <code>os.getenv()</code>.</p>
+  <pre><code id="environment">import os
+
+project_name = os.getenv("PROJECT_NAME", "local-beam-study")
+token = os.getenv("DEMO_API_TOKEN")
+
+if not token:
+    raise RuntimeError("Set DEMO_API_TOKEN before external upload.")</code></pre>
+  <button data-copy-code="#environment">Copy code</button>
+  <p>The second argument of <code>getenv</code> is a safe default. A secret token normally has no default, because uploading without one should not happen.</p>
+
+  <h2>Log facts, never secrets</h2>
+  <pre><code id="safe-logging"># Good: records that a token exists, not its value.
+logger.info("Token supplied (%d characters); value hidden.", len(token))
+
+# Never do this:
+# logger.info("Token is %s", token)</code></pre>
+  <button data-copy-code="#safe-logging">Copy code</button>
+  <p>Use logger formatting arguments instead of building a long f-string when logging. The logger can avoid formatting messages that will be filtered out.</p>
+  <div class="warning"><strong>Warning:</strong> do not put passwords, API tokens, connection strings, or private measurement data in source code, logs, screenshots, or commits. Treat log output as something another person may read.</div>
+
+  <h2>Engineering example</h2>
+  <p>The matching script configures an application logger, reads <code>PROJECT_NAME</code>, and disables an external-upload step when <code>DEMO_API_TOKEN</code> is absent. It intentionally never prints the token.</p>
+  <pre><code id="run-example">python examples/20_logging_configuration.py</code></pre>
+  <button data-copy-code="#run-example">Copy command</button>
+  <p><strong>Expected output without a token:</strong> an INFO start message, a WARNING that external upload is disabled, and an INFO load ratio of <code>84%</code>.</p>
+  <div class="exercise"><h2>Try it yourself</h2><p>Make a logger named <code>pump_monitor</code>. Read <code>PUMP_LIMIT_L_MIN</code> from the environment with a safe local default of <code>"120"</code>, convert it to a float, and log WARNING when a flow is above the limit. Ensure that no secret-like value is logged.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Which level would you use for normal program progress?</li><li>Why use an environment variable instead of placing a token in Python code?</li><li>What is the safe default behavior when a required token is missing?</li><li>Why should a log state that a token exists but not show its value?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/howto/logging.html" target="_blank" rel="noopener">Python 3.14: logging HOWTO</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

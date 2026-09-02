@@ -1,0 +1,2 @@
+Module 1 file example
+This text file stays inside the course workspace.

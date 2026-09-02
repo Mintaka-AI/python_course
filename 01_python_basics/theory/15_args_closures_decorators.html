@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arguments, Closures, and Decorators</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="14_lambda_higher_order.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="16_oop_basics.html">Next →</a></p>
+  <p><a href="../examples/15_args_closures_decorators.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/15_args_closures_decorators.py</code>.</p>
+  <h1>Flexible Arguments, Closures, and Decorators</h1>
+  <p><strong>Prerequisite:</strong> know function parameters, return values, local variables, and that functions can be passed as values. These tools are powerful, so use them only when a simpler function is not clearer.</p>
+
+  <h2>Collecting extra arguments</h2>
+  <p><code>*args</code> collects extra positional arguments into a tuple. <code>**kwargs</code> collects extra keyword arguments into a dictionary. The names <code>args</code> and <code>kwargs</code> are conventional; the stars have the special meaning.</p>
+  <h3>Syntax</h3>
+  <pre><code id="args-syntax">def function_name(required, *args, **kwargs):
+    # args is a tuple; kwargs is a dictionary
+    pass</code></pre>
+  <button data-copy-code="#args-syntax">Copy code</button>
+  <pre><code id="args-example">def report_readings(agent_name, *readings_c, **metadata):
+    print(agent_name, "received", len(readings_c), "readings")
+    print("Average:", sum(readings_c) / len(readings_c))
+    print("Source:", metadata["source"])
+
+report_readings("Monitor", 20.0, 20.5, 19.8, source="lab-A")</code></pre>
+  <button data-copy-code="#args-example">Copy code</button>
+  <p><strong>Expected output:</strong></p><pre><code>Monitor received 3 readings
+Average: 20.1
+Source: lab-A</code></pre>
+
+  <h2>Closures: a function remembers context</h2>
+  <p>A <strong>closure</strong> is an inner function that keeps access to a value from its outer function, even after the outer function has finished. A closure can make a reusable converter with a fixed calibration value.</p>
+  <pre><code id="closure-example">def make_calibrator(offset_c):
+    def calibrate(raw_c):
+        return raw_c + offset_c
+    return calibrate
+
+lab_a_calibrate = make_calibrator(0.3)
+print(lab_a_calibrate(20.0))</code></pre>
+  <button data-copy-code="#closure-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>20.3</code>. The returned <code>calibrate</code> function remembers <code>offset_c</code> as <code>0.3</code>.</p>
+
+  <h2>Decorators: wrap a function</h2>
+  <p>A <strong>decorator</strong> receives a function and returns a replacement function. The replacement can add behavior before and after the original function, such as logging an AI-agent tool call. The <code>@decorator_name</code> syntax applies the wrapper.</p>
+  <h3>Syntax</h3>
+  <pre><code id="decorator-syntax">def decorator_name(function):
+    def wrapper(*args, **kwargs):
+        return function(*args, **kwargs)
+    return wrapper
+
+@decorator_name
+def original_function():
+    pass</code></pre>
+  <button data-copy-code="#decorator-syntax">Copy code</button>
+  <pre><code id="decorator-example">def announce(function):
+    def wrapper(*args, **kwargs):
+        print("Starting calculation")
+        result = function(*args, **kwargs)
+        print("Calculation finished")
+        return result
+    return wrapper
+
+@announce
+def area_m2(width_m, height_m):
+    return width_m * height_m
+
+print(area_m2(3, 2))</code></pre>
+  <button data-copy-code="#decorator-example">Copy code</button>
+  <p><strong>Expected output:</strong></p><pre><code>Starting calculation
+Calculation finished
+6</code></pre>
+
+  <div class="note">A wrapper that accepts <code>*args, **kwargs</code> can call many different functions. It forwards received arguments with <code>function(*args, **kwargs)</code>.</div>
+  <div class="warning"><strong>Safety note:</strong> never let a decorator hide changes to an engineering result, skip validation, or log sensitive data. Keep safety calculations explicit and test the wrapped function as well as the decorator.</div>
+  <div class="exercise"><h2>Try it yourself</h2><ol><li>Write a function that receives any number of forces with <code>*forces_n</code> and returns their total.</li><li>Make a closure that converts metres to a chosen unit using a remembered multiplier.</li><li>Create a decorator that prints a message before calling a function that returns a volume.</li></ol></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What type of object does <code>*args</code> collect?</li><li>What type of object does <code>**kwargs</code> collect?</li><li>What does a closure remember?</li><li>What is the job of a decorator's wrapper function?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/glossary.html" target="_blank" rel="noopener">Python 3.14 glossary</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iterators and Generators</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="12_comprehensions_preview.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="14_lambda_higher_order.html">Next →</a></p>
+  <p><a href="../examples/13_iterators_generators.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/13_iterators_generators.py</code>.</p>
+  <h1>Iterators and Generators</h1>
+  <p><strong>Prerequisite:</strong> you should understand lists, <code>for</code> loops, functions, and comprehensions. This lesson explains what a <code>for</code> loop does behind the scenes.</p>
+  <p>When an AI agent processes many sensor readings, it may not need every value in memory at once. Iterators and generators provide values one at a time. This is called <strong>lazy processing</strong>.</p>
+
+  <h2>Iterable, iterator, and the iterator protocol</h2>
+  <p>An <strong>iterable</strong> is an object you can loop over, such as a list, string, tuple, dictionary, or range. An <strong>iterator</strong> is the object that remembers the current position while values are being read.</p>
+  <p>Use <code>iter(iterable)</code> to create an iterator. Use <code>next(iterator)</code> to request one value. When no values remain, <code>next()</code> raises <code>StopIteration</code>. A <code>for</code> loop handles this stop signal for you.</p>
+  <h3>Syntax</h3>
+  <pre><code id="iterator-syntax">iterator = iter(iterable)
+value = next(iterator)</code></pre>
+  <button data-copy-code="#iterator-syntax">Copy code</button>
+  <pre><code id="iterator-example">readings_c = [19.5, 20.1, 20.4]
+reading_iterator = iter(readings_c)
+
+print(next(reading_iterator))
+print(next(reading_iterator))
+print(next(reading_iterator))</code></pre>
+  <button data-copy-code="#iterator-example">Copy code</button>
+  <p><strong>Expected output:</strong></p><pre><code>19.5
+20.1
+20.4</code></pre>
+  <p>Do not call <code>next(reading_iterator)</code> a fourth time here: it would raise <code>StopIteration</code>.</p>
+
+  <h2>Generators with yield</h2>
+  <p>A generator function looks like a normal function, but it uses <code>yield</code> instead of returning all results at once. Calling it creates a generator iterator; its body begins only when you ask for a value. Each <code>yield</code> sends a value out and pauses the function until the next request.</p>
+  <h3>Syntax</h3>
+  <pre><code id="yield-syntax">def generator_name(values):
+    for value in values:
+        yield transformed_value</code></pre>
+  <button data-copy-code="#yield-syntax">Copy code</button>
+  <pre><code id="yield-example">def loads_in_newtons(loads_kn):
+    for load_kn in loads_kn:
+        yield load_kn * 1_000
+
+for load_n in loads_in_newtons([2.5, 4.0, 3.2]):
+    print(f"{load_n:.0f} N")</code></pre>
+  <button data-copy-code="#yield-example">Copy code</button>
+  <p><strong>Expected output:</strong></p><pre><code>2500 N
+4000 N
+3200 N</code></pre>
+
+  <h2>Generator expressions</h2>
+  <p>A generator expression is the lazy version of a list comprehension. It uses parentheses, not square brackets. It is useful when you need to pass values through one time, for example to <code>sum()</code>.</p>
+  <pre><code id="generator-expression">loads_kn = [2.5, 4.0, 3.2]
+loads_n = (load_kn * 1_000 for load_kn in loads_kn)
+
+print(sum(loads_n))
+print(list(loads_n))</code></pre>
+  <button data-copy-code="#generator-expression">Copy code</button>
+  <p><strong>Expected output:</strong></p><pre><code>9700.0
+[]</code></pre>
+  <p>The generator is exhausted after <code>sum()</code>. Create a new generator if you need to read the values again.</p>
+
+  <div class="note">Use a list when you need to index, reuse, or inspect all values. Use a generator when values can be processed once, especially for a large stream of measurements.</div>
+  <div class="warning"><strong>Safety note:</strong> generators do not make invalid readings safe. Validate units, ranges, and missing data before using a generated value for an engineering decision. Also remember that an exhausted iterator silently has no more data.</div>
+  <div class="exercise"><h2>Try it yourself</h2><ol><li>Create an iterator from <code>["A-01", "A-02"]</code> and print both IDs with <code>next()</code>.</li><li>Write a generator function that yields each temperature in Fahrenheit from a list of Celsius values.</li><li>Use a generator expression to count readings greater than 50 with <code>sum(1 for ...)</code>.</li></ol></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What is the difference between an iterable and an iterator?</li><li>What do <code>iter()</code> and <code>next()</code> do?</li><li>What happens when <code>next()</code> is called after an iterator is exhausted?</li><li>How does <code>yield</code> differ from <code>return</code> in a generator function?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/classes.html#iterators" target="_blank" rel="noopener">Python 3.14: iterators and generators</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

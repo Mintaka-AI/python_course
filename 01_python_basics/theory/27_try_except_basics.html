@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>try and except Basics</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="26_paths_and_files.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="13_iterators_generators.html">Optional track →</a></p>
+  <h1>Basic Error Handling with try and except</h1>
+  <p>An exception is an error signal raised while a program runs. Use <code>try</code> and <code>except</code> when an expected outside value, such as typed text, may be invalid.</p>
+  <pre><code id="try-except">force_text = "not a number"
+
+try:
+    force_n = float(force_text)
+except ValueError:
+    print("Enter a number for force.")
+else:
+    print(f"Force: {force_n} N")</code></pre>
+  <button data-copy-code="#try-except">Copy code</button>
+  <p><strong>Expected output:</strong> <code>Enter a number for force.</code>. The <code>else</code> block runs only if converting the text succeeds.</p>
+  <pre><code id="file-error">from pathlib import Path
+
+try:
+    text = Path("missing.txt").read_text(encoding="utf-8")
+except FileNotFoundError:
+    print("The measurement file was not found.")</code></pre>
+  <button data-copy-code="#file-error">Copy code</button>
+  <p><strong>Expected output:</strong> <code>The measurement file was not found.</code>, unless a file named <code>missing.txt</code> exists.</p>
+  <div class="warning">Catch a specific exception such as <code>ValueError</code> or <code>FileNotFoundError</code>. A bare <code>except:</code> can hide programming mistakes. Module 2 covers validation, <code>finally</code>, raising errors, type hints, and pytest in depth.</div>
+  <p><a href="../examples/11_running_and_debugging.py">Open matching debugging source</a> — opening shows source only; run it from MSYS2 UCRT64 with <code>python examples/11_running_and_debugging.py</code>.</p>
+  <div class="exercise"><h2>Try it yourself</h2><p>Change <code>force_text</code> to <code>"1250"</code>. What line now runs? Then try <code>"12 kN"</code> and explain why it is invalid for <code>float()</code>.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>When is <code>except ValueError</code> useful?</li><li>When does <code>else</code> run?</li><li>Why avoid a bare <code>except:</code>?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/errors.html#handling-exceptions" target="_blank" rel="noopener">Python 3.14: handling exceptions</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Strings and f-strings</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="09_functions.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="11_running_and_debugging.html">Next →</a></p>
+  <p><a href="../examples/10_strings_and_fstrings.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/10_strings_and_fstrings.py</code>.</p>
+  <h1>Strings and f-strings</h1>
+  <p><strong>Prerequisite:</strong> lesson 8 introduced strings as a collection type; this lesson expands that topic after lesson 9 so you can also format function results. Engineers use strings for labels, units, file names, and clear messages.</p>
+  <p>For the short strings introduction, see <a href="08_collections.html">lesson 8: Data structures</a>. This lesson is the single detailed reference for string methods and f-strings.</p>
+
+  <h2>Read text and make new text</h2>
+  <p>Strings are immutable: you cannot change one character in place. String methods return a new string instead.</p>
+  <pre><code id="string-methods">material = "  Structural Steel  "
+
+clean_material = material.strip()
+print(clean_material)
+print(clean_material.lower())
+print(clean_material.replace(" ", "_"))
+print(clean_material.startswith("Structural"))</code></pre>
+  <button data-copy-code="#string-methods">Copy code</button>
+  <p><strong>Expected output:</strong> <code>Structural Steel</code>, then lowercase text, then <code>Structural_Steel</code>, then <code>True</code>. <code>strip()</code> removes outer spaces; it does not modify <code>material</code>.</p>
+
+  <h2>Split and join values</h2>
+  <pre><code id="split-join">sensor_line = "A1,20.5,OK"
+parts = sensor_line.split(",")
+
+print(parts)
+print(f"Sensor {parts[0]} measured {parts[1]} °C")
+print(" | ".join(parts))</code></pre>
+  <button data-copy-code="#split-join">Copy code</button>
+  <p><strong>Expected output:</strong> a three-item list, a readable sensor message, and <code>A1 | 20.5 | OK</code>. <code>split()</code> breaks text into a list; <code>join()</code> combines string items.</p>
+
+  <h2>Format values with f-strings</h2>
+  <p>Put <code>f</code> before a string to insert values inside braces. You can also control how numbers are displayed.</p>
+  <pre><code id="f-string">load_n = 1234.567
+area_m2 = 0.25
+pressure_pa = load_n / area_m2
+
+print(f"Load: {load_n:.1f} N")
+print(f"Pressure: {pressure_pa:,.2f} Pa")
+print(f"Safe: {pressure_pa &lt; 5000}")</code></pre>
+  <button data-copy-code="#f-string">Copy code</button>
+  <p><strong>Expected output:</strong> <code>Load: 1234.6 N</code>, <code>Pressure: 4,938.27 Pa</code>, and <code>Safe: True</code>. <code>.1f</code> means one decimal place; <code>,.2f</code> adds thousands separators and two decimal places.</p>
+
+  <h2>Quotes and multiline text</h2>
+  <pre><code id="quotes">message = "The sensor status is 'OK'."
+report = """Test report
+Material: Steel
+Status: passed"""
+
+print(message)
+print(report)</code></pre>
+  <button data-copy-code="#quotes">Copy code</button>
+  <p><strong>Expected output:</strong> the first line contains the word <code>'OK'</code>; the report prints on three lines. Different quote types help when text itself contains a quote.</p>
+
+  <div class="note">Use f-strings for clear output: <code>f"Temperature: {temperature_c:.1f} °C"</code>. They are usually easier to read than joining many strings with <code>+</code>.</div>
+  <div class="warning">Do not place untrusted user text directly into commands or file paths. For now, treat input as data and print it safely; validation comes later.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>Store a material name with extra spaces and a test result such as <code>"pass"</code>. Clean the name, make the result uppercase, then print a one-line f-string report containing the material, a load of 2500 N, and the result.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>Why does <code>strip()</code> return a value instead of changing the original string?</li><li>What does <code>split(",")</code> return?</li><li>What does the <code>f</code> mean before a string?</li><li>What does <code>{value:.2f}</code> do?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/stdtypes.html#text-sequence-type-str" target="_blank" rel="noopener">Python 3.14: text sequences</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

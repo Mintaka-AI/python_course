@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Advanced Type Hints</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="17_dataclasses_enums.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="19_exceptions_context_managers.html">Next →</a></p>
+  <p><a href="../examples/18_advanced_typing.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/18_advanced_typing.py</code>.</p>
+  <h1>Advanced Type Hints</h1>
+  <p class="subtitle">Lesson 18 · Describe the shape of data before it causes confusion</p>
+  <div class="note"><strong>Prerequisite:</strong> know functions, classes, dictionaries, and basic hints such as <code>float</code> and <code>str</code>. Type hints document intent and help a type checker, but Python does not enforce them automatically at runtime.</div>
+
+  <h2>Built-in generic types</h2>
+  <p>Put the item type in square brackets. This tells a reader what a collection should contain.</p>
+  <pre><code id="collection-hints">temperatures_c: list[float] = [21.5, 22.0]
+limits: dict[str, float] = {"pressure_kpa": 250.0}
+
+def average(values: list[float]) -> float:
+    return sum(values) / len(values)</code></pre>
+  <button data-copy-code="#collection-hints">Copy code</button>
+  <p><strong>Expected result:</strong> a reader knows that <code>average</code> accepts floating-point readings and returns one float.</p>
+
+  <h2>Optional, Union, and Literal</h2>
+  <p>Use <code>Optional[T]</code> when a value can be <code>T</code> or <code>None</code>. Use <code>Union</code> for one of several types, and <code>Literal</code> for a small fixed set of exact values.</p>
+  <pre><code id="choice-hints">from typing import Literal, Optional, Union
+
+measured_pressure_kpa: Optional[float] = None
+sensor_value: Union[int, float] = 12.5
+test_status: Literal["pass", "fail"] = "pass"</code></pre>
+  <button data-copy-code="#choice-hints">Copy code</button>
+  <p><strong>Expected result:</strong> <code>measured_pressure_kpa</code> may be absent, <code>sensor_value</code> may be an integer or float, and a type checker can reject a status other than <code>"pass"</code> or <code>"fail"</code>.</p>
+
+  <h2>TypedDict: a dictionary with named expected keys</h2>
+  <p>Use <code>TypedDict</code> when a dictionary is useful, for example after reading JSON, but its expected keys deserve documentation.</p>
+  <pre><code id="typed-dict">from typing import TypedDict
+
+class SensorRecord(TypedDict):
+    sensor_id: str
+    temperature_c: float
+
+record: SensorRecord = {"sensor_id": "T-01", "temperature_c": 21.5}</code></pre>
+  <button data-copy-code="#typed-dict">Copy code</button>
+  <p>A type checker can report a missing <code>temperature_c</code> key or a text value where a float is expected.</p>
+
+  <h2>Protocol: describe ability, not ancestry</h2>
+  <p>A <code>Protocol</code> says what attributes or methods an object needs. Any object with that shape fits; it does not need to inherit from a particular parent class.</p>
+  <pre><code id="protocol">from typing import Protocol
+
+class HasMass(Protocol):
+    mass_kg: float
+
+def total_mass(items: list[HasMass]) -> float:
+    return sum(item.mass_kg for item in items)</code></pre>
+  <button data-copy-code="#protocol">Copy code</button>
+  <p>A <code>SteelPlate</code> and a <code>Motor</code> can both be accepted if each has a <code>mass_kg</code> attribute.</p>
+
+  <h2>Abstract base classes: require a shared method</h2>
+  <p>A protocol is structural: an object fits when it has the right shape. An abstract base class (ABC) is a parent class that deliberately requires subclasses to provide a method.</p>
+  <pre><code id="abstract-base-class">from abc import ABC, abstractmethod
+
+class LoadCase(ABC):
+    @abstractmethod
+    def force_n(self) -> float:
+        """Return the force for this load case."""
+
+class StaticLoad(LoadCase):
+    def force_n(self) -> float:
+        return 1_200.0
+
+print(StaticLoad().force_n())</code></pre>
+  <button data-copy-code="#abstract-base-class">Copy code</button>
+  <p><strong>Expected output:</strong> <code>1200.0</code>. Python prevents creating a <code>LoadCase</code> subclass that does not implement <code>force_n()</code>.</p>
+
+  <h2>Generics: retain the caller's type</h2>
+  <p>A generic function uses a type variable as a placeholder. It means “the output has the same type as the input item.”</p>
+  <pre><code id="generic">from typing import TypeVar
+
+T = TypeVar("T")
+
+def first_reading(values: list[T]) -> T:
+    return values[0]</code></pre>
+  <button data-copy-code="#generic">Copy code</button>
+  <p><strong>Expected output:</strong> with <code>list[int]</code>, the result is an <code>int</code>; with <code>list[SensorRecord]</code>, it is a <code>SensorRecord</code>.</p>
+  <div class="warning"><strong>Warning:</strong> hints do not convert values and do not validate user input. <code>load_kn: float = "heavy"</code> still runs until an operation fails. Validate outside data and use tests; a static type checker is an additional tool.</div>
+
+  <h2>Engineering example</h2>
+  <p>The matching script combines all three ideas: typed sensor dictionaries, a protocol for objects with mass, and a generic first-item function.</p>
+  <pre><code id="run-example">python examples/18_advanced_typing.py</code></pre>
+  <button data-copy-code="#run-example">Copy command</button>
+  <div class="exercise"><h2>Try it yourself</h2><p>Define a <code>TypedDict</code> named <code>MaterialRecord</code> with <code>name: str</code> and <code>density_kg_m3: float</code>. Then define a <code>HasArea</code> protocol and a function that adds the <code>area_m2</code> of a list of compatible objects.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What does <code>list[float]</code> communicate?</li><li>When is <code>TypedDict</code> a good fit?</li><li>What must an object have to satisfy <code>HasMass</code>?</li><li>What promise does <code>def first(values: list[T]) -&gt; T</code> make?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/library/typing.html" target="_blank" rel="noopener">Python 3.14: typing</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>

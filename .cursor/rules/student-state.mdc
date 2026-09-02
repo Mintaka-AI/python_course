@@ -1,0 +1,41 @@
+---
+description: Update student progress in state.json
+globs: state.json
+alwaysApply: false
+---
+
+# Updating state.json
+
+The `state.json` file stores student progress. Update it after each review.
+
+## When to Update
+
+- Student started a module → `status: "in_progress"`, `course.last_session`
+- Theory reviewed → `theory.score`, `theory.mastered`, `theory.attempts++`
+- Example completed → add to `examples.completed`, on success `examples.mastered: true`
+- Code reviewed → add to `code.completed`, on success `code.mastered: true`
+- All three blocks `mastered: true` → `status: "completed"`, move to next module
+
+## Date Format
+
+ISO 8601: `2026-09-02T15:30:00+04:00`
+
+## Example: Theory Review Update
+
+```json
+"theory": {
+  "mastered": true,
+  "score": 80,
+  "attempts": 1,
+  "last_checked": "2026-09-02T15:30:00+04:00",
+  "notes": "Confused int and float, rest was correct"
+}
+```
+
+## Rules
+
+- Do not remove modules or fields from the structure.
+- Do not change module `title` values.
+- Write specific remarks in `notes`.
+- Update `course.current_module` on transition.
+- Keep valid JSON syntax (double quotes, no trailing commas).

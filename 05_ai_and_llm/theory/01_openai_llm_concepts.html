@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OpenAI and LLM Concepts</title><link rel="stylesheet" href="../../assets/css/course.css"></head>
+<body><main>
+  <p><a href="index.html">Module 5 index</a> · <a href="02_sdk_and_first_response.html">Next →</a></p>
+  <h1>OpenAI Models and LLM Concepts</h1>
+  <h2>Learning goals</h2><ul><li>Explain model, token, input, instructions, context, response, and output.</li><li>Distinguish the OpenAI API from ChatGPT.</li><li>Identify appropriate and inappropriate engineering uses.</li></ul>
+  <h2>1. What is a large language model?</h2>
+  <p>A large language model, or LLM, processes an input and generates an output by predicting useful sequences of tokens. A <strong>token</strong> is a small piece of text. It may be a complete word, part of a word, punctuation, or whitespace. Token counts affect how much context fits in a request and how API usage is measured.</p>
+  <p>A model is good at language tasks such as classification, extraction, summarization, explanation, and drafting. It is not a guaranteed database of facts and it does not automatically verify an engineering formula.</p>
+  <h2>2. OpenAI API and ChatGPT are different products</h2>
+  <p>ChatGPT is an application for people. The OpenAI API is a developer interface used by your Python program. An API request explicitly chooses a model, supplies instructions and input, and receives a response object. API access, billing, project permissions, and rate limits are managed separately from ordinary ChatGPT conversations.</p>
+  <h2>3. Important request concepts</h2>
+  <table><thead><tr><th>Concept</th><th>Meaning</th></tr></thead><tbody>
+    <tr><td>Model</td><td>The OpenAI model that processes the request.</td></tr>
+    <tr><td>Instructions</td><td>High-level behavior and rules for the response.</td></tr>
+    <tr><td>Input</td><td>The user content or data supplied to the model.</td></tr>
+    <tr><td>Context</td><td>Information available to the model for this interaction.</td></tr>
+    <tr><td>Response</td><td>The API object containing generated output and metadata.</td></tr>
+    <tr><td>Output text</td><td>A convenient combined text representation exposed by the SDK as <code>response.output_text</code>.</td></tr>
+  </tbody></table>
+  <h2>4. Why model output can be wrong</h2>
+  <p>The model generates likely output from patterns and supplied context. It can misunderstand a request, omit an assumption, use an incorrect unit, or produce a confident false claim. This failure is often called a <strong>hallucination</strong>. Better instructions and structured outputs reduce some errors, but do not create mathematical or factual certainty.</p>
+  <h2>5. Safe engineering responsibility split</h2>
+  <table><thead><tr><th>Task</th><th>Recommended component</th></tr></thead><tbody>
+    <tr><td>Understand natural-language intent</td><td>OpenAI model, followed by validation</td></tr>
+    <tr><td>Extract candidate values and units</td><td>OpenAI model with Structured Outputs, followed by validation</td></tr>
+    <tr><td>Calculate stress, pressure, or conversion</td><td>Tested deterministic Python function</td></tr>
+    <tr><td>Explain a verified result</td><td>OpenAI model using supplied verified facts</td></tr>
+    <tr><td>Approve a consequential design</td><td>Qualified professional and required engineering process</td></tr>
+  </tbody></table>
+  <div class="warning">Never ask the model to invent missing dimensions, loads, material properties, units, safety factors, or standards. Missing information must produce a question or refusal.</div>
+  <h2>6. Data and privacy</h2><p>Before sending information to an API, determine whether the project permits it. Do not send credentials, API keys, personal data, confidential designs, or proprietary measurements without appropriate authorization and controls.</p>
+  <div class="exercise"><h2>Try it yourself</h2><p>Classify five tasks into “language model,” “Python calculation,” or “human engineering review”: extract a force value, divide force by area, explain a verified result, choose a safety factor, and approve a pressure vessel.</p></div>
+  <h2>Check your understanding</h2><ol><li>What is a token?</li><li>How is the OpenAI API different from ChatGPT?</li><li>Why is generated output not a verified calculation?</li><li>Which component should calculate stress?</li></ol>
+  <h2>Further reading</h2><ul><li><a href="https://developers.openai.com/api/docs/quickstart" target="_blank" rel="noopener">OpenAI Developer quickstart</a></li><li><a href="https://developers.openai.com/api/docs/guides/text" target="_blank" rel="noopener">OpenAI text generation guide</a></li><li><a href="https://developers.openai.com/api/docs/models" target="_blank" rel="noopener">OpenAI model catalog</a></li></ul>
+</main><script src="../../assets/js/course.js" defer></script><footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer></body></html>

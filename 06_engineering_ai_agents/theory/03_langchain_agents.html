@@ -1,0 +1,22 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LangChain Agents</title><link rel="stylesheet" href="../../assets/css/course.css"></head><body><main>
+<p><a href="02_openai_sdk_agent.html">← Previous</a> · <a href="index.html">Module 6 index</a> · <a href="04_langgraph_workflows.html">Next →</a></p>
+<h1>Build an Agent with LangChain</h1><h2>Learning goals</h2><ul><li>Explain what LangChain adds above a provider SDK.</li><li>Create an agent from a model, tools, and a system prompt.</li><li>Choose between direct SDK code and a framework.</li></ul>
+<h2>1. What is LangChain?</h2><p>LangChain is an application framework for programs that use language models. Its agent abstraction supplies a standard tool-calling loop, message format, middleware extension points, and integrations. Current LangChain agents are built on LangGraph, but beginners can use <code>create_agent()</code> without constructing a graph.</p>
+<h2>2. A Python function becomes a tool</h2><pre><code id="lc">from langchain.agents import create_agent
+from engineering_tools import calculate_stress
+
+agent = create_agent(
+    model="openai:gpt-5.6",
+    tools=[calculate_stress],
+    system_prompt="Use tools for calculations. Never guess units.",
+)
+result = agent.invoke({"messages": [{
+    "role": "user", "content": "Find stress for 120000 N and 0.0008 m^2."
+}]})
+print(result["messages"][-1].content)</code></pre><button data-copy-code="#lc">Copy code</button><p>LangChain reads the function name, type hints, and docstring to describe the tool. The function still validates ranges and calculates the result.</p>
+<h2>3. The call sequence</h2><ol><li><code>create_agent()</code> assembles the model, tools, and instructions.</li><li><code>invoke()</code> starts a run with message state.</li><li>The model answers, requests missing data, or requests a tool.</li><li>LangChain executes a registered tool and returns its output.</li><li>The final answer is in the last message.</li></ol>
+<h2>4. When should you use it?</h2><p>Use direct OpenAI SDK code when a small loop is clearer and provider-specific control matters. Use LangChain for a standard agent interface, middleware, model portability, or integrations. A framework does not replace tests, authorization, observability, budgets, or domain review.</p><div class="warning">Every tool expands the authority of the agent. Expose only the minimum safe set.</div>
+<div class="exercise"><h2>Try it yourself</h2><p>Run <code>examples/langchain_agent.py</code>. Improve the tool docstring so accepted units are unmistakable. Add a pressure tool and compare tool selection.</p></div>
+<h2>Check your understanding</h2><ol><li>What describes a plain function tool?</li><li>Does LangChain verify an engineering formula?</li><li>When is direct SDK code simpler?</li></ol>
+<h2>Further reading</h2><ul><li><a href="https://docs.langchain.com/oss/python/langchain/agents" target="_blank" rel="noopener">LangChain agents</a></li><li><a href="https://docs.langchain.com/oss/python/langchain/tools" target="_blank" rel="noopener">LangChain tools</a></li><li><a href="https://docs.langchain.com/oss/python/langchain/quickstart" target="_blank" rel="noopener">LangChain Python quickstart</a></li></ul>
+</main><script src="../../assets/js/course.js" defer></script><footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer></body></html>

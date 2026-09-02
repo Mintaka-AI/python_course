@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running and Debugging Python</title>
+  <link rel="stylesheet" href="../../assets/css/course.css">
+</head>
+<body><main>
+  <p><a href="10_strings_and_fstrings.html">← Previous</a> · <a href="index.html">Module 1 index</a> · <a href="12_comprehensions_preview.html">Next →</a></p>
+  <p><a href="../examples/11_running_and_debugging.py">Open matching example source</a> — run it in MSYS2 UCRT64 with <code>python examples/11_running_and_debugging.py</code>.</p>
+  <h1>Running and Debugging Python</h1>
+  <p>Running a program means asking Python to execute a <code>.py</code> file. Debugging means finding and fixing the reason a program does not work as expected.</p>
+
+  <h2>Run a program in UCRT64</h2>
+  <p>Open the <strong>MSYS2 UCRT64</strong> terminal in your project folder. If your file is named <code>load_check.py</code>, run:</p>
+  <pre><code id="run-program">python load_check.py</code></pre>
+  <button data-copy-code="#run-program">Copy code</button>
+  <p>To confirm that you are using the intended Python installation, run <code>which python</code> and <code>python --version</code> first. On Windows, use the UCRT64 terminal for this course rather than Command Prompt or PowerShell.</p>
+
+  <h2>Read output carefully</h2>
+  <pre><code id="run-example"># load_check.py
+load_kn = 12.5
+limit_kn = 10
+
+if load_kn > limit_kn:
+    print("Warning: load exceeds the limit.")
+else:
+    print("Load is within the limit.")</code></pre>
+  <button data-copy-code="#run-example">Copy code</button>
+  <p><strong>Expected output:</strong> <code>Warning: load exceeds the limit.</code> because 12.5 is greater than 10. Testing with a known input is the first debugging step.</p>
+
+  <h2>What a traceback tells you</h2>
+  <p>When Python cannot continue, it prints a traceback. Read it from the bottom up: the last line names the error and its message. Earlier lines show where the error happened.</p>
+  <pre><code id="traceback-example">Traceback (most recent call last):
+  File "load_check.py", line 3, in &lt;module&gt;
+    pressure_pa = load_n / area_m2
+NameError: name 'load_n' is not defined</code></pre>
+  <button data-copy-code="#traceback-example">Copy code</button>
+  <p><strong>Explanation:</strong> line 3 uses <code>load_n</code>, but that name was never created. Check spelling and make sure the assignment appears before the use.</p>
+
+  <h2>Use small print checks</h2>
+  <pre><code id="debug-print">force_n = 1000
+area_m2 = 0
+
+print(f"force_n = {force_n}, area_m2 = {area_m2}")
+if area_m2 == 0:
+    print("Cannot calculate pressure: area is zero.")
+else:
+    print(force_n / area_m2)</code></pre>
+  <button data-copy-code="#debug-print">Copy code</button>
+  <p><strong>Expected output:</strong> the variable values print first, followed by the clear zero-area message. This avoids a <code>ZeroDivisionError</code> and reveals the bad input.</p>
+
+  <h2>Common beginner errors</h2>
+  <ul>
+    <li><code>SyntaxError</code> — Python cannot read the code, often because of a missing colon, quote, or bracket.</li>
+    <li><code>IndentationError</code> — a block after <code>if</code>, <code>for</code>, <code>while</code>, or <code>def</code> is not indented correctly.</li>
+    <li><code>NameError</code> — a variable or function name is misspelled or has not been created.</li>
+    <li><code>TypeError</code> — an operation used incompatible types, such as adding text and a number.</li>
+  </ul>
+
+  <div class="note">Fix the first reported error, save the file, and run it again. One syntax error can cause several later-looking messages.</div>
+  <div class="warning">Never hide errors with a broad <code>except:</code> while learning. Read the traceback first; it contains the evidence needed to fix the cause.</div>
+  <div class="exercise"><h2>Try it yourself</h2><p>Create <code>debug_load_check.py</code> with a load and limit. Print both values with an f-string, then print either <code>PASS</code> or <code>FAIL</code>. Run it in UCRT64 with <code>python debug_load_check.py</code>. Change one variable name on purpose, read the traceback, then fix it.</p></div>
+  <div class="exercise"><h2>Review questions</h2><ol><li>What command runs <code>load_check.py</code> in UCRT64?</li><li>Which traceback line usually gives the error type and message?</li><li>What does a <code>NameError</code> commonly mean?</li><li>Why can a debug <code>print()</code> be useful?</li></ol></div>
+  <h2>Further reading</h2><p><a href="https://docs.python.org/3.14/tutorial/errors.html" target="_blank" rel="noopener">Python 3.14: errors and exceptions</a></p>
+</main><script src="../../assets/js/course.js" defer></script>
+  <footer class="site-footer">&copy; Mintaka-AI LLC, All rights reserved</footer>
+</body>
+</html>
